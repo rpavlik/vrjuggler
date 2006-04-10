@@ -1,0 +1,53 @@
+                           Gadgeteer Release Notes
+                           -----------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.
+
+===============================================================================
+
+ Version: 1.0.1
+Released: August 29, 2005
+    Bugs fixed in this release:
+       * A critical bug in the InterSense API and IS-900 device drivers has
+         been fixed.
+
+       * The InterSense API driver has been updated to the latest release of
+         the InterSense Interface SDK and now has better support for
+         UNIX-based operating systems running on 64-bit architectures.
+
+       * gadget::KeyEvent objects on Windows now provide the same information
+         as is available when using the X Window System.
+
+       * Mouse scroll wheel events are now supported and are treated as
+         button press/release events for mouse buttons 4 and 5.
+
+
+ Version: 1.0.0
+Released: July 5, 2005
+    New in this release:
+       * Support for Windows XP x64 Edition.
+
+ Version: 0.18.0
+Released: October 11, 2004
+    Required changes when upgrading from all previous versions:
+        * Device driver plug-ins must include the following as an exported
+          function:
+
+             GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+             {
+                return __GADGET_version;
+             }
+
+        * Cluster plug-ins must include the following as an exported
+          function:
+
+             GADGET_CLUSTER_PLUGIN_EXPORT(vpr::Uint32) getGadgeteerVersion()
+             {
+                return __GADGET_version;
+             }
+
