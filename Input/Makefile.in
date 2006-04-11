@@ -1,0 +1,41 @@
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/Input.  It requires GNU make.
+# $Id$
+# -----------------------------------------------------------------------------
+
+default: all
+
+includedir	= @includedir@/Input
+srcdir		= @srcdir@
+topdir		= @topdir@
+top_srcdir	= @top_srcdir@
+wwwdir		= ${srcdir}/Doc
+VJROOT		= ${top_srcdir}
+VJ_SRCDIR	= @VJ_SRCDIR@/Input
+WORKDIR		= ${topdir}/Input
+
+# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
+# '_clean' target to be run besides the standard 'clean' target.
+_LOCAL_CLEAN	= 1
+
+# Include common definitions.
+include ${topdir}/Makefile.base
+include ${MKPATH}/vj.rec.mk
+
+SUBDIRS		= vjGlove vjInput vjPosition InputManager ibox
+
+# -----------------------------------------------------------------------------
+# Library targets.
+# -----------------------------------------------------------------------------
+all: dbg opt dso ddso
+
+dbg opt dso ddso obj depend newdepend install:
+	${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"		\
+            OBJDIR="${OBJDIR}" recursive
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+_clean:
+	${MAKE} RECTARGET="clean" OPTIMIZER="${OPTIMIZER}"	\
+            OBJDIR="${OBJDIR}" recursive

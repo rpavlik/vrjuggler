@@ -1,0 +1,87 @@
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/test/input
+# $Id$
+# -----------------------------------------------------------------------------
+
+srcdir		= @srcdir@
+
+COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
+VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+VJ_LIBS		= -L${VJ_BASE_DIR}/lib -lJuggler
+VPATH		= @srcdir@
+
+# These test programs require the following libraries to be linked:
+#
+#     -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -limage -lGLU -lGL -lXext \
+#     -lXmu -lX11 -lm -lC
+#
+# If the library uses POSIX threads, "-lpthread" must also be added to the
+# list of libraries.
+#
+# The proper library path must be specified depending on the Application
+# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
+# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
+# use -L/usr/lib64.
+EXTRA_LIBS	= @TEST_EXTRA_LIBS@
+
+OBJECTS		= main.o main-ibox.o main-inputgroup.o main-logiclass.o
+PROGS		= go go-ibox go-inputgroup go-logiclass
+
+# -----------------------------------------------------------------------------
+# Targets.
+# -----------------------------------------------------------------------------
+default: all
+
+all: ${PROGS}
+
+# ----------------
+# new
+# ----------------
+new: new.o
+	${COMPILE} -o $@ new.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+new.o: new.C
+	${COMPILE} -c -o $@ ${srcdir}/new.C
+
+# ----------------
+# go
+# ----------------
+go: main.o
+	${COMPILE} -o $@ main.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+main.o: main.C
+	${COMPILE} -c -o $@ ${srcdir}/main.C
+
+# ----------------
+# go-ibox
+# ----------------
+go-ibox: main-ibox.o
+	${COMPILE} -o $@ main-ibox.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+main-ibox.o: main-ibox.C
+	${COMPILE} -c -o $@ ${srcdir}/main-ibox.C
+
+# ----------------
+# go-inputgroup
+# ----------------
+go-inputgroup: main-inputgroup.o
+	${COMPILE} -o $@ main-inputgroup.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+main-inputgroup.o: main-inputgroup.C
+	${COMPILE} -c -o $@ ${srcdir}/main-inputgroup.C
+
+# ----------------
+# go-logiclass
+# ----------------
+go-logiclass: main-logiclass.o
+	${COMPILE} -o $@ main-logiclass.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+main-logiclass.o: main-logiclass.C
+	${COMPILE} -c -o $@ ${srcdir}/main-logiclass.C
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f Makedepend ${PROGS} ${OBJECTS} core so_locations
+	rm -rf ./ii_files
