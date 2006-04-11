@@ -1,0 +1,32 @@
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/test/testDynamicCastSTL
+# $Id$
+# -----------------------------------------------------------------------------
+
+srcdir		= @srcdir@
+
+COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
+VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+VPATH		= @srcdir@
+
+OBJECTS		= main.o
+
+# -----------------------------------------------------------------------------
+# Targets.
+# -----------------------------------------------------------------------------
+default: all
+
+all: run
+
+run: ${OBJECTS}
+	${COMPILE} -o $@ ${OBJECTS}
+
+main.o: main.cpp
+	${COMPILE} -c -o $@ ${srcdir}/main.cpp
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f Makedepend cubes ${OBJECTS} core so_locations
+	rm -rf ./ii_files
