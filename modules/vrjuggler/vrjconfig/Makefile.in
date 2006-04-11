@@ -1,0 +1,156 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for vrjuggler/vrjconfig.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+beandir=		$(bindir)/beans
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
+EXTRA_JAVA_SRCS_PATH=	$(srcdir)/tweek
+INSTALL=		@INSTALL@
+INSTALL_FILES=		
+JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
+JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
+
+TWEEK_JARS	= @TWEEK_JARS@
+TWEEK_EXT_JARS	= @TWEEK_EXT_JARS@
+JCCL_JARS	= @JCCL_JARS@
+CLASSPATH	= $(JCCL_JARS)$(JCPS)$(TWEEK_EXT_JARS)$(JCPS)$(TWEEK_JARS)
+
+VRJCONFIG_PKG		= org.vrjuggler.vrjconfig
+VRJCONFIG_DIR		= $(subst .,/,$(VRJCONFIG_PKG))
+VRJCONFIG_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(VRJCONFIG_DIR)/*.java))
+VRJCONFIG_CLASSES	= $(VRJCONFIG_SRCS:.java=.class)
+
+UI_PKG			= org.vrjuggler.vrjconfig.ui
+UI_DIR			= $(subst .,/,$(UI_PKG))
+UI_SRCS			= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_DIR)/*.java))
+UI_CLASSES		= $(UI_SRCS:.java=.class)
+
+PLACER_PKG		= org.vrjuggler.vrjconfig.ui.placer
+PLACER_DIR		= $(subst .,/,$(PLACER_PKG))
+PLACER_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(PLACER_DIR)/*.java))
+PLACER_CLASSES		= $(PLACER_SRCS:.java=.class)
+
+WIZARD_PKG		= org.vrjuggler.vrjconfig.wizard
+WIZARD_DIR		= $(subst .,/,$(WIZARD_PKG))
+WIZARD_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_DIR)/*.java))
+WIZARD_CLASSES		= $(WIZARD_SRCS:.java=.class)
+
+JAVA_SRCS = \
+	$(VRJCONFIG_SRCS) \
+	$(UI_SRCS) \
+	$(PLACER_SRCS) \
+	$(WIZARD_SRCS)
+
+JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
+
+JARS		= 
+BEANS		= VRJConfig
+
+# List the packages for which JavaDoc documentation will be generated.
+DOC_PKGS	= $(VRJCONFIG_PKG)
+
+webroot		= $(HOME)/public_html/jugglerweb
+instdir		= vrjuggler/vrjconfig/1.0
+doc_prefix	= $(webroot)/$(instdir)
+DOC_ROOT	= programmer.reference.java
+
+include $(MKPATH)/dpp.obj.mk
+
+# -----------------------------------------------------------------------------
+# Extra targets.
+# -----------------------------------------------------------------------------
+jars: $(JARS) $(addsuffix .jar, $(BEANS))
+
+VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES) $(PLACER_CLASSES) $(WIZARD_CLASSES)
+	$(JAR) cvf $@ \
+		$(VRJCONFIG_DIR)/*.class \
+		$(UI_DIR)/*.class \
+		$(PLACER_DIR)/*.class \
+		$(WIZARD_DIR)/*.class
+	cd $(srcdir) && $(JAR) uvf $(topdir)/vrjconfig/$@ \
+		$(VRJCONFIG_DIR)/images/*.gif \
+		$(VRJCONFIG_DIR)/images/*.png \
+		$(UI_DIR)/images/*.gif \
+		$(UI_DIR)/images/*.png \
+		LICENSE-java-laf.txt
+
+# This cannot be named 'install' because Doozer++ already defines that.
+vrjconfig-install:
+	@echo "------------------------------------------------"
+	@echo "Installing the VRJConfig code base"
+	@echo "------------------------------------------------"
+ifeq (@OS_TYPE@, UNIX)
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig/vrjconfig.sh	\
+          $(bindir)/vrjconfig
+else
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/vrjconfig/vrjconfig.bat $(bindir)/vrjconfig.bat
+endif	# if OS_TYPE == UNIX
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$jar		\
+                $(bindir) || exit 1;					\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$bean.jar	\
+                $(beandir) || exit 1 ;					\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) || exit 1; \
+          done
+endif
+
+install-docs:
+	$(MKINSTALLDIRS) $(doc_prefix)
+	rm -rf $(doc_prefix)/$(DOC_ROOT)
+	mv $(DOC_ROOT) $(doc_prefix)
+
+CLEAN_FILES	+= $(JARS) $(addsuffix .jar, $(BEANS)) $(JAVA_CLASSES)
+
+ifdef GLOBAL_BUILD
+   CLEAN_DIRS+=	$(top_srcdir)/bin
+endif
+
+include Makefile.inc
