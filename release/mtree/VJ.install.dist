@@ -1,0 +1,18 @@
+# This file defines the specification for the base installation directory
+# tree for VR Juggler.
+#
+# $Id$
+
+/set type=dir mode=0755
+.
+    Data
+    ..
+    bin
+    ..
+    include
+    ..
+    samples
+    ..
+    test
+    ..
+..
