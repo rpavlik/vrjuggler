@@ -1,0 +1,28 @@
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/samples/ogl
+# $Id$
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Build targets.
+# -----------------------------------------------------------------------------
+default: all
+
+all: combo cubes wand digitalGlove simpleGlove glove torus
+
+cubes glove digitalGlove simpleGlove wand torus combo::
+	cd $@ && $(MAKE) all
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	-cd cubes        && $(MAKE) clean
+	-cd wand         && $(MAKE) clean
+	-cd glove        && $(MAKE) clean
+	-cd digitalGlove && $(MAKE) clean
+	-cd simpleGlove  && $(MAKE) clean
+	-cd torus	 && $(MAKE) clean
+	-cd combo	 && $(MAKE) clean

@@ -1,0 +1,44 @@
+# ------------------------------------------------------------------------------
+# This file is imported via require by the Perl script
+# release/scripts/makefiles-gen.pl.  It populates the %VARS hash with
+# values used in generating Makefiles from Makefile.in templates at
+# installation time.  Any @...@ symbols in the Makefile.in's found in the 
+# directories samples and test are to be replaced by these values during the
+# installation process.  All values should be in single quotes to prevent
+# expansion of possible variable strings by Perl.
+#
+# Generated for use on @PLATFORM@
+#
+#	$Id$
+# ------------------------------------------------------------------------------
+
+$VARS{'CXX'}                  = '@CXX@';
+$VARS{'CPPFLAGS'}             = '@CPPFLAGS@';
+$VARS{'CXXFLAGS'}             = '@CXXFLAGS@';
+$VARS{'DBG_FLAGS'}            = '@DBG_FLAGS@';
+$VARS{'DEFS'}                 = '@DEFS@';
+$VARS{'DEP_GEN_FLAG'}         = '@DEP_GEN_FLAG@';
+$VARS{'EXTRA_LINK_FLAGS'}     = '@EXTRA_LINK_FLAGS@';
+$VARS{'INCLUDES'}             = '@INCLUDES@';
+$VARS{'OBJ_FILE_SUFFIX'}      = '@OBJ_FILE_SUFFIX@';
+$VARS{'OBJ_NAME_FLAG'}        = '@OBJ_NAME_FLAG@';
+$VARS{'PLATFORM'}             = '@PLATFORM@';
+$VARS{'APP_EXTRA_FLAGS'}      = '@APP_EXTRA_FLAGS@';
+$VARS{'APP_EXTRA_INC_AW'}     = '@APP_EXTRA_INC_AW@';
+$VARS{'APP_EXTRA_INC_SL'}     = '@APP_EXTRA_INC_SL@';
+$VARS{'APP_VJ_LIBS_BASIC'}    = '@APP_VJ_LIBS_BASIC_INST@';
+$VARS{'APP_VJ_LIBS_GL'}       = '@APP_VJ_LIBS_GL@';
+$VARS{'APP_VJ_LIBS_PF'}       = '@APP_VJ_LIBS_PF@';
+$VARS{'APP_VJ_LIBS_AW'}       = '@APP_VJ_LIBS_AW@';
+$VARS{'APP_VJ_LIBS_SL'}       = '@APP_VJ_LIBS_SL@';
+$VARS{'APP_VJ_LIBS_UTILS'}    = '@APP_VJ_LIBS_UTILS@';
+$VARS{'APP_LIBS_BASIC'}       = '@APP_LIBS_BASIC@';
+$VARS{'APP_EXTRA_LIBS_BEGIN'} = '@APP_EXTRA_LIBS_BEGIN@';
+$VARS{'APP_EXTRA_LIBS_END'}   = '@APP_EXTRA_LIBS_END@';
+$VARS{'APP_EXTRA_LIBS_BASIC'} = '@APP_EXTRA_LIBS_BASIC@';
+$VARS{'APP_EXTRA_LIBS_GL'}    = '@APP_EXTRA_LIBS_GL@';
+$VARS{'APP_EXTRA_LIBS_PF'}    = '@APP_EXTRA_LIBS_PF@';
+$VARS{'APP_EXTRA_LIBS_AW'}    = '@APP_EXTRA_LIBS_AW@';
+$VARS{'APP_EXTRA_LIBS_SL'}    = '@APP_EXTRA_LIBS_SL@';
+
+1;

@@ -1,0 +1,38 @@
+# This file defines the specification for the sample code directory tree for
+# the VR Juggler installation.
+#
+# $Id$
+
+/set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
+.
+    samples
+	nav
+	..
+	ogl
+	    combo
+	    ..
+	    cubes
+	    ..
+	    digitalGlove
+	    ..
+	    simpleGlove
+	    ..
+	    torus
+	    ..
+	    wand
+	    ..
+	    glove
+	    ..
+	..
+	pf
+	    pfConfigNav
+	    ..
+	    pfNav
+	    ..
+	    pfTools
+	    ..
+	..
+	tools
+	..
+    ..
+..
