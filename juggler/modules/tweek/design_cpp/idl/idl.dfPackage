@@ -1,0 +1,52 @@
+package idkfctylgvb1ctyljbch;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:idl#Class#tweek::Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:idl#Class#tweek::SubjectManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference23 {
+}/**
+@__ref <oiref:idl#Class#tweek::Observer:oiref><oihard>
+@__modelType reference 
+*/
+class reference24 {
+}/**
+@__ref <oiref:idl#Class#tweek::BeanDeliverySubject:oiref><oihard>
+@__modelType reference 
+*/
+class reference2 {
+}/**
+@__ref <oiref:idl#Class#tweek::BeanInfo:oiref><oihard>
+@__modelType reference 
+*/
+class reference3 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:idl#Class#tweek::SubjectManager:oiref>=40,180,220,227,0:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=360,10,101,132,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::BeanInfo:oiref>=580,230,200,180,0:oigroup>
+<oigroup:<oiref:idl#Extends#tweek::BeanDeliverySubject#tweek::Subject:oiref>=410,220,410,142:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Observer:oiref>=79,10,112,102,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::BeanDeliverySubject:oiref>=310,220,230,190,0:oigroup>
+*/
+class __positions {
+}
