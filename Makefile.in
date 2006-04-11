@@ -1,0 +1,520 @@
+# -----------------------------------------------------------------------------
+# $Id$
+#
+# Base Makefile.in for VR Juggler.  It requires GNU make.
+# -----------------------------------------------------------------------------
+# Targets are:
+#
+# all             - Build everything.
+# all-abi         - Build everything using all supported ABIs.
+# dbg             - Build a debugging, static copy of the library.
+# ddso            - Build a debugging, dynamic shared object version of the
+#                   library.
+# opt             - Build an optimized, static copy of the library.
+# dso             - Build a dynamic shared object version of the library.
+# obj             - Build the object files using the default value for
+#                   ${OBJDIR}.
+# gui             - Build the Java-based configuration GUI.
+#
+# links           - Define links (for developer use only) that provide
+#                   functionality allowing the use of the $VJ_BASE_DIR
+#                   environment variable.
+# clean-links     - Remove the symlinks created by 'links'.
+#
+# lib-static      - Build the static version of the library.  This target
+#                   depends on a correct value for ${LIBDIR} (that does not
+#                   have a default value).
+# lib-dynamic     - Build the dynamic shared version of the library.  This
+#                   target depends on a correct value for ${LIBDIR} (that does
+#                   not have a default value).
+#
+# install-all     - Install all versions of the library, all header files,
+#                   the Data directory, the configuration GUI and the test
+#                   code.
+# install-all-abi - Install every ABI possible on the target platform.
+# install         - Install the library, all header files, the Data
+#                   directory, the configuration GUI and the test code.
+# install-dbg     - Install the debugging, static version of the library.
+# install-ddso    - Install the debugging, dynamic shared object version of
+#                   the library.
+# install-opt     - Install the optimized, static version of the library.
+# install-dso     - Install the dynamic shared object version of the library.
+# install-headers - Install only the header files.
+# install-test    - Install only the test code.
+# install-data    - Install only the Data directory.
+# install-gui     - Install only the configuration GUI.
+#
+# depend          - Recursively build the dependencies for the source files.
+# newdepend       - Recursively (and forcibly) rebuild the dependencies for
+#                   the source files.
+#
+# clean           - Clean up everything (uses common 'clean' target).
+# clobber         - Clean up everything and remove the directory containing
+#                   the compiled library.
+#
+# info            - Print out information about the build process that may be
+#                   useful to the user.
+#
+# The default target is 'dbg'.  'install' will install the debugging, static
+# version of the library.
+# -----------------------------------------------------------------------------
+
+default: dbg
+
+# Include common definitions.
+include @topdir@/Makefile.base
+
+# Variables whose values are specific to this file.
+includedir	= @includedir@
+instlinks	= ${topdir}/instlinks
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+VJROOT		= ${top_srcdir}
+VJ_SRCDIR	= @VJ_SRCDIR@
+WORKDIR		= ${topdir}
+
+# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
+# '_clean' target to be run besides the standard 'clean' target.
+_LOCAL_CLEAN	= 1
+
+# Include recursive target code.
+include ${MKPATH}/vj.rec.mk
+
+# Extra compiler and linker options needed only by this file.
+OPT_FLAGS	= -O @OPT_FLAGS@
+
+# SGI-specific dynamic-shared-object information.
+DSOREGFILE	= @DSOREGFILE@
+DSOVERSION	= @DSOVERSION@
+DSOVERSIONOPTS	= @DSOVERSIONOPTS@
+
+# -----------------------------------------------------------------------------
+# Build and installation directory naming information.
+# -----------------------------------------------------------------------------
+_DEBUG_DIR	= debug
+_OPT_DIR	= opt
+_DEFAULT_DIR	= ${_DEBUG_DIR}
+
+# ------------------------------------------------
+# Object file build and installation directories.
+# ------------------------------------------------
+_BUILDDIR_BASE	= ${topdir}/obj
+_BUILDDIR	= ${_BUILDDIR_BASE}/${PLATFORM}/${ABI}/${INST_SET}
+_DBG_BUILDDIR	= ${_BUILDDIR}/${_DEBUG_DIR}
+_OPT_BUILDDIR	= ${_BUILDDIR}/${_OPT_DIR}
+
+# --------------------------------------------
+# Library build and installation directories.
+# --------------------------------------------
+
+# ${_install_libdir} is the base directory (minus any debugging or optimized
+# subdirectories) where the library will be installed.
+_install_libdir = ${libdir}${LIBBITSUF}/${INST_SET}
+
+# ${_LIBDIR_NAME} is the name of the library directory including an ABI suffix
+# if applicable.
+_LIBDIR_NAME	= lib${LIBBITSUF}
+
+# ${_LIBDIR_BASE} is the base directory where the library will be built.
+_LIBDIR_BASE	= ${topdir}/${_LIBDIR_NAME}
+
+# ${_LIBDIR} is the first-level subdirectory of ${_LIBDIR_BASE} that is
+# named by the instruction set being used (${INST_SET}).
+_LIBDIR		= ${_LIBDIR_BASE}/${INST_SET}
+
+# ${_DBG_LIBDIR} and ${_OPT_LIBDIR} are the directories where the library
+# is actually built.  The first is for a debugging copy of the library and
+# the second is for an optimized version of the library.
+_DBG_LIBDIR	= ${_LIBDIR}/${_DEBUG_DIR}
+_OPT_LIBDIR	= ${_LIBDIR}/${_OPT_DIR}
+
+# Full name of the static and dynamic versions of the library.
+LIB_STATIC	= ${LIBRARY}.a
+LIB_DYNAMIC	= ${LIBRARY}.@SHAREDLIB_EXT@
+
+# -----------------------------------------------------------------------------
+# Lists used for various types of recursion.
+# -----------------------------------------------------------------------------
+
+# Subdirectories used for recursion through the source tree.
+SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
+
+# Subdirectories used for recursion through the test source tree when
+# installing.
+TEST_SUBDIRS	= . CfgTest Quat input ogl ogl/cubes ogl/wand pfNav threads
+
+# The list of ABIs supported on this platform.
+ABI_LIST	= @ABI_LIST@
+
+# -----------------------------------------------------------------------------
+# Library targets.
+# -----------------------------------------------------------------------------
+all: opt dso dbg ddso
+	@echo "------------------------------------------------"
+	@echo "Creating symlinks in ${_LIBDIR}"
+	@echo "------------------------------------------------"
+	cd ${_LIBDIR} &&						\
+          rm -f ${LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${LIB_STATIC} ./
+	cd ${_LIBDIR} &&						\
+          rm -f ${LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${LIB_DYNAMIC} ./
+	@echo "------------------------------------------------"
+	@echo "Library build complete"
+	@echo "------------------------------------------------"
+
+all-abi:
+	@abi_list='${ABI_LIST}' ;					\
+          for abi in $$abi_list ; do					\
+              echo "------------------------------------------------" ;	\
+              echo "Building ${LIBRARY} using $$abi" ;			\
+              echo "------------------------------------------------" ;	\
+              echo "${MAKE} vjABI=$$abi all" ;				\
+              ${MAKE} vjABI=$$abi all ;					\
+          done
+
+# Make a debugging version of the library.
+dbg: _build_dbg gui
+	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" lib-static
+	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
+
+# Make a debugging version of the library that uses DSOs.
+ddso: _build_dbg gui
+	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" lib-dynamic
+	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
+
+# Make an optimized version of the library.
+opt: _build_opt gui
+	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" lib-static
+	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" links
+
+# Make an optimized version of the library that uses DSOs.
+dso: _build_opt gui
+	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" lib-dynamic
+	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" links
+
+# Build the object files with the debugging flags enabled.
+_build_dbg:
+	@echo "------------------------------------------------"
+	@echo "Making DBG version of ${LIBRARY}"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
+	${MAKE} depend
+	@echo "------------------------------------------------"
+	@echo "Building object files"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="dbg" OPTIMIZER="-g"			\
+          OBJDIR="${_DBG_BUILDDIR}" recursive
+
+# Build the object files with the optimization flags enabled.
+_build_opt:
+	@echo "------------------------------------------------"
+	@echo "Making OPT version of ${LIBRARY}"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
+	${MAKE} depend
+	@echo "------------------------------------------------"
+	@echo "Building object files"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"	\
+          OBJDIR="${_OPT_BUILDDIR}" recursive
+
+# Build only the object files using the default values for ${OBJDIR}.
+obj:
+	@echo "------------------------------------------------"
+	@echo "Making ${LIBRARY} object files"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="$@" recursive
+	@echo "------------------------------------------------"
+	@echo "Object files built"
+	@echo "------------------------------------------------"
+
+# Build the Java-based configuration GUI.
+gui:
+ifeq (@BUILD_GUI@, yes)
+	@echo "------------------------------------------------"
+	@echo "Building GUI"
+	@echo "------------------------------------------------"
+	cd GUI && ${MAKE} all
+	@echo "------------------------------------------------"
+	@echo "GUI done"
+	@echo "------------------------------------------------"
+else
+	@echo "------------------------------------------------"
+	@echo "GUI cannot be built without javac"
+	@echo "------------------------------------------------"
+endif
+
+# Construct the static version of the library from the object files.
+lib-static ${LIB_STATIC}:
+	@echo "------------------------------------------------"
+	@echo "Creating ${LIB_STATIC}"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${LIBDIR}
+	cd ${LIBDIR} && ${AR} ${LIB_STATIC} ${OBJDIR}/*.o
+	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/${LIB_STATIC} ./
+	@echo "------------------------------------------------"
+	@echo "${LIB_STATIC} done"
+	@echo "------------------------------------------------"
+
+# Construct the dynamic shared version of the library from the object files.
+lib-dynamic ${LIB_DYNAMIC}:
+	@echo "------------------------------------------------"
+	@echo "Creating ${LIB_DYNAMIC}"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${LIBDIR}
+	cd ${LIBDIR} && 						\
+          ${LD} ${LDOPTS} ${DSOVERSIONOPTS} -o ${LIB_DYNAMIC} ${OBJDIR}/*.o
+	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/${LIB_DYNAMIC} ./
+	@echo "------------------------------------------------"
+	@echo "${LIB_DYNAMIC} done"
+	@echo "------------------------------------------------"
+
+# Make links for developer use that provide the needed functionality for
+# the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# should be set to ${VJROOT_ABS}.
+links:
+	@echo "------------------------------------------------"
+	@echo "Setting up developer installation links"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${instlinks}
+	${scriptdir}/mkinstalldirs ${instlinks}/include
+	cd ${instlinks}/include &&					\
+          dir_list='${SUBDIRS}' ;					\
+            for dir in $$dir_list ; do					\
+                rm -f ./$$dir ;						\
+                ln -s ${VJROOT_ABS}/$$dir ./$$dir ;			\
+            done
+	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
+          ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
+	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
+	cd ${instlinks}/include && ln -sf ${topdir}/config.h ./config.h
+	${scriptdir}/mkinstalldirs ${instlinks}/bin
+	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjCfg.jar ./
+	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/editconfig ./vjConfig
+	@echo "\n\n"
+	@echo "---------------------------------------------------------------"
+	@echo 'You should now set $$VJ_BASE_DIR to:'
+	@cd ${instlinks} && echo "  `pwd`"
+	@echo "---------------------------------------------------------------"
+
+# Remove the links in ${instlinks}.
+clean-links:
+	@echo "------------------------------------------------"
+	@echo "Removing developer installation links"
+	@echo "------------------------------------------------"
+	-cd ${instlinks}/include && rm -f ./config.h
+	rm -rf ${instlinks}
+
+# Installation targets.
+install-all: install-opt install-dso install-dbg install-ddso		\
+             install-headers install-test install-data install-gui
+	@echo "------------------------------------------------"
+	@echo "Creating symlinks in ${_install_libdir}"
+	@echo "------------------------------------------------"
+	cd ${_install_libdir} &&					\
+          rm -f ${LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${LIB_STATIC} ./
+	cd ${_install_libdir} &&					\
+          rm -f ${LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${LIB_DYNAMIC} ./
+	@echo "------------------------------------------------"
+	@echo "Library installation complete"
+	@echo "------------------------------------------------"
+
+install-all-abi:
+	@abi_list='${ABI_LIST}' ;					\
+          for abi in $$abi_list ; do					\
+              echo "------------------------------------------------" ;	\
+              echo "Installing $$abi version of ${LIBRARY}" ;		\
+              echo "------------------------------------------------" ;	\
+              ${MAKE} vjABI=$$abi install-all ;				\
+          done
+	@echo "------------------------------------------------"
+	@echo "install-all-abi done"
+	@echo "------------------------------------------------"
+
+
+install: install-dbg
+	${MAKE} install-headers
+	${MAKE} install-test
+	${MAKE} install-data
+	${MAKE} install-gui
+	@echo "------------------------------------------------"
+	@echo "Install done"
+	@echo "------------------------------------------------"
+
+install-dbg: dbg
+	@echo "------------------------------------------------"
+	@echo "Installing static debugging library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
+	${INSTALL} -m 644 ${_DBG_LIBDIR}/${LIB_STATIC}			\
+          ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} &&					\
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_STATIC} ./
+
+install-ddso: ddso
+	@echo "------------------------------------------------"
+	@echo "Installing dynamic debugging library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
+	${INSTALL} -m 755 ${_DBG_LIBDIR}/${LIB_DYNAMIC}			\
+          ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} &&					\
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_DYNAMIC} ./
+
+install-opt: opt
+	@echo "------------------------------------------------"
+	@echo "Installing static optimized library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
+	${INSTALL} -m 644 ${_OPT_LIBDIR}/${LIB_STATIC}			\
+          ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} &&					\
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_STATIC} ./
+
+install-dso: dso
+	@echo "------------------------------------------------"
+	@echo "Installing dynamic optimizied library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
+	${INSTALL} -m 755 ${_OPT_LIBDIR}/${LIB_DYNAMIC}			\
+          ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} &&					\
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_DYNAMIC} ./
+
+install-headers:
+	@echo "------------------------------------------------"
+	@echo "Installing header files"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="install" recursive
+	${INSTALL} -m 644 ${topdir}/config.h ${includedir}
+
+install-test:
+	@echo "------------------------------------------------"
+	@echo "Installing test programs"
+	@echo "------------------------------------------------"
+	${scriptdir}/install-src.pl -i ${top_srcdir}/test -o ${prefix}/test
+	${scriptdir}/makefiles-gen.pl --CXX="${CXX}" --DEFS="${DEFS}"	\
+          --CPPFLAGS="${CPPFLAGS}" --CXXFLAGS="${CXXFLAGS}" 		\
+          --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test" 	\
+          --SUBDIRS="${TEST_SUBDIRS}" --srcdir="."			\
+          --prefix="${prefix}/test"					\
+          --TEST_VJ_LIBS='@TEST_VJ_LIBS_SUBST@'				\
+          --TEST_EXTRA_LIBS="@TEST_EXTRA_LIBS_SUBST@"
+
+install-data:
+	@echo "------------------------------------------------"
+	@echo "Installing standard data files"
+	@echo "------------------------------------------------"
+	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -o ${prefix}/Data
+
+install-gui: gui
+ifeq (@BUILD_GUI@, yes)
+	@echo "------------------------------------------------"
+	@echo "Installing vjConfig"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${bindir}
+	${INSTALL} -m 644 ${topdir}/GUI/VjCfg.jar ${bindir}
+	${INSTALL} -m 755 ${VJROOT_ABS}/GUI/editconfig ${bindir}/vjConfig
+else
+	@echo "------------------------------------------------"
+	@echo "Skipping installation of vjConfig (not built)"
+	@echo "------------------------------------------------"
+endif
+
+# Dependency generation.
+depend: .depend_done
+
+newdepend:
+	@echo "------------------------------------------------"
+	@echo "Regenerating dependencies"
+	@echo "------------------------------------------------"
+	-@rm -f .depend_done
+	${MAKE} RECTARGET="$@" recursive
+	@touch .depend_done
+
+.depend_done:
+	@echo "------------------------------------------------"
+	@echo "Generating dependencies"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="depend" recursive
+	@touch .depend_done
+
+# -----------------------------------------------------------------------------
+# Clean-up.  '_clean' removes all the files in the build directories.  
+# 'clobber' removes the ${_DBG_BUILDDIR} and ${_OPT_BUILDDR} directories.
+# -----------------------------------------------------------------------------
+_clean:
+	@echo "------------------------------------------------"
+	@echo "Cleaning up the source tree"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="clean" recursive
+	cd GUI && ${MAKE} clean
+	@if test -d ${_DBG_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Cleaning in ${_DBG_BUILDDIR} ..."                 ;	\
+            echo "------------------------------------------------" ;	\
+            cd ${_DBG_BUILDDIR} ;					\
+            rm -f *.o core so_locations ;				\
+            rm -rf ./ii_files ;						\
+        fi
+	@if test -d ${_OPT_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Cleaning in ${_OPT_BUILDDIR} ..."                  ;	\
+            echo "------------------------------------------------" ;	\
+            cd ${_OPT_BUILDDIR} ;					\
+            rm -f *.o core so_locations ;				\
+            rm -rf ./ii_files ;						\
+        fi
+	-@rm -f .*_done
+	rm -f so_locations
+	@echo "------------------------------------------------"
+	@echo "Done with 'clean'"
+	@echo "------------------------------------------------"
+
+clobber: _clean
+	@echo "------------------------------------------------"
+	@echo "Clobbering build directories"
+	@echo "------------------------------------------------"
+	@if test -d ${_DBG_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Removing ${_DBG_BUILDDIR} ..."                    ;	\
+            echo "------------------------------------------------" ;	\
+            rm -rf ${_DBG_BUILDDIR} ;					\
+        fi
+	@if test -d ${_OPT_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Removing ${_DBG_BUILDDIR} ..."                    ;	\
+            echo "------------------------------------------------" ;	\
+            rm -rf ${_OPT_BUILDDIR} ;					\
+        fi
+	@if test -d ${_DBG_LIBDIR} ; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Removing ${_DBG_LIBDIR} ..."                      ;	\
+            echo "------------------------------------------------" ;	\
+            rm -rf ${_DBG_LIBDIR} ;					\
+        fi
+	@if test -d ${_OPT_LIBDIR} ; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Removing ${_OPT_LIBDIR} ..."                      ;	\
+            echo "------------------------------------------------" ;	\
+            rm -rf ${_OPT_LIBDIR} ;					\
+        fi
+	@echo "------------------------------------------------"
+	@echo "Done with 'clobber'"
+	@echo "------------------------------------------------"
+
+# -----------------------------------------------------------------------------
+# Human-readable information about the build system.
+# -----------------------------------------------------------------------------
+info::
+	@echo "\nInfo for the make of ${LIBRARY}"
+	@echo "\nOBJDIR: ${OBJDIR}"
+	@echo "VJROOT_ABS: ${VJROOT_ABS}"
+	@echo "Default ABI: ${ABI}"
+	@echo "Default instruction set: ${INST_SET}"
+	@echo "ABI list: ${ABI_LIST}"
+	@echo "DBG_BUILDDIR: ${_DBG_BUILDDIR}"
+	@echo "OPT_BUILDDIR: ${_OPT_BUILDDIR}"
+	@echo "Installation prefix: ${prefix}"
+	@echo "includedir: ${includedir}"
+	@echo "libdir: ${libdir}"
+	@${scriptdir}/print-targets.sh
