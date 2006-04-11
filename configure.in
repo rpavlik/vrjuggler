@@ -1,0 +1,779 @@
+# -----------------------------------------------------------------------------
+# Base configure.in for VR Juggler.
+# $Date$
+# -----------------------------------------------------------------------------
+# This file is "compiled" by GNU autoconf to generate the configure script
+# that is actually run.
+# -----------------------------------------------------------------------------
+
+AC_REVISION($Revision$)
+AC_INIT(Config/vjChunkDesc.cpp)
+AC_CONFIG_HEADER(vjDefines.h)
+
+# -----------------------------------------------------------------------------
+# Command-line arguments (--enable-option, --with-pkg=package_name).
+# -----------------------------------------------------------------------------
+
+dnl # -------------------------------------------- #
+dnl # --with-pkg[=arg] and --without-pkg arguments #
+dnl # -------------------------------------------- #
+
+dnl # Enable binary format.  Possible values are "O32", "N32" or "64".
+dnl # The default is "N32".
+AC_ARG_WITH(abi,
+            [  --with-abi=[O32|N32_M3|N32_M4|64_M3|64_M4|HP]
+                          define the Application Binary Interface to use
+                          [default=N32_M3]],
+            _abi_type="$withval", _abi_type='N32_M3')
+
+dnl # Define the location where the library will be built.  This is not
+dnl # currently used anyhwere in this script.
+dnl # The default is "$srcdir/lib".
+AC_ARG_WITH(builddir,
+            [  --with-builddir=[PATH]
+                          define the location where the library will be built
+                          [default=\$srcdir/lib]],
+            _vj_builddir="$withval")
+
+dnl # Define which threading model to use.  Possible values are "SGI_IPC" or
+dnl # "POSIX".
+dnl # The default is "SGI_IPC".
+AC_ARG_WITH(threads,
+            [  --with-threads=[SGI_IPC|POSIX]
+                          define thread package [default=SGI_IPC]],
+            _thread_pkg="$withval", _thread_pkg='SGI_IPC')
+
+dnl # Define the root directory for the Java installation.
+dnl # The default is /usr/java.
+_JDK_HOME_DEFAULT="/usr/java"
+_JDK_HOME_ALT_LIST="/usr/local/java"
+AC_ARG_WITH(jdkhome,
+            [  --with-jdkhome=[PATH]  JDK installation directory [default=/usr/java]],
+            JDK_HOME="$withval", JDK_HOME="${_JDK_HOME_DEFAULT}")
+
+dnl # Define the root directory for the Performer installation.
+dnl # The default is /usr.
+AC_ARG_WITH(pfroot,
+            [  --with-pfroot=[PATH]    Performer installation directory [default=/usr]],
+            PFROOT="$withval", PFROOT='/usr')
+
+dnl # Define the root directory for the OpenGL installation.
+dnl # The default is /usr.
+AC_ARG_WITH(oglroot,
+            [  --with-oglroot=[PATH]   OpenGL installation directory [default=/usr]],
+            OGLROOT="$withval", OGLROOT='/usr')
+
+dnl # ------------------------------------------------------ #
+dnl # --enable-feature[=arg] and --disable-feature arguments #
+dnl # ------------------------------------------------------ #
+
+dnl # Enable debugging.  Possible values are "yes" or "no".  "yes" is set
+dnl # with --enable-debug and "no" is set with --disable-debug.
+dnl # The default is "yes".
+AC_ARG_ENABLE(debug,
+              [  --enable-debug          enable debugging [default=yes]],
+              _enable_debug="$enableval", _enable_debug="yes")
+
+dnl # Enable compilation of the OpenGL API.  Possible values are "yes" or
+dnl # "no".  "yes" is set with --enable-opengl and "no" is set with
+dnl # --disable-opengl.
+dnl # The default is "yes".
+AC_ARG_ENABLE(opengl,
+              [  --enable-opengl         use OpenGL API [default=yes]],
+              _enable_opengl="$enableval", _enable_opengl='yes')
+
+dnl # Enable compilation of the Performer API.  Possible values are "yes" or
+dnl # "no".  "yes" is set with --enable-perf and "no" is set with
+dnl # --disable-perf.
+dnl # The default is "yes".
+AC_ARG_ENABLE(perf,
+              [  --enable-perf           use Perfromer API [default=yes]],
+              _enable_perf="$enableval", _enable_perf='yes')
+
+# Enable compile-time debugging blocks.
+if test "x${_enable_debug}" = "xyes" ; then
+    AC_DEFINE(VJ_DEBUG,)
+fi
+
+# Set default values for these before checking $abi_type.  Currently, these
+# are for non-SGI platforms.
+ABI='32'
+LIBBITSUF=''
+
+# Based on the value of $abi_type, set $ABI for later use and the Makefile
+# substitution variables $LIBBITSUF and $ABI.
+if test "x${_abi_type}" = "x64_M3" ; then
+    ABI='64'
+    ISA='mips3'
+    LIBBITSUF='64'
+    _EXTRA_FLAGS='-64 -mips3'
+elif test "x${_abi_type}" = "x64_M4" ; then
+    ABI='64'
+    ISA='mips4'
+    LIBBITSUF='64'
+    _EXTRA_FLAGS='-64 -mips4'
+elif test "x${_abi_type}" = "xN32_M3" ; then
+    ABI='N32'
+    ISA='mips3'
+    LIBBITSUF='32'
+    _EXTRA_FLAGS='-n32 -mips3'
+elif test "x${_abi_type}" = "xN32_M4" ; then
+    ABI='N32'
+    ISA='mips4'
+    LIBBITSUF='32'
+    _EXTRA_FLAGS='-n32 -mips4'
+elif test "x${_abi_type}" = "xO32" ; then
+    ABI='O32'
+    ISA='mips2'
+    LIBBITSUF=''
+    _EXTRA_FLAGS='-o32 -mips2'
+elif test "x${_abi_type}" = "xHP" ; then
+    ABI=''
+    ISA=''
+    LIBBITSUF=''
+    _EXTRA_FLAGS=''
+fi
+
+# -----------------------------------------------------------------------------
+# System-dependent stuff.
+# -----------------------------------------------------------------------------
+AC_CANONICAL_HOST
+
+# Operating system release information.  This may contain anything and should
+# be treated as a string.
+_OS_REL_STR=`uname -r`
+
+# Operating system version number only (any miscellaneous text is stripped).
+# This will only contain a number and can be treated as a float-point value.
+# NOTE: It is currently not used in config.h.
+_OS_REL_NUM=`uname -r | sed -e 's/^[^0-9]*\([0-9][0-9]*\.[0-9][0-9]*\)[^0-9]*$/\1/'`
+
+# Major and minor version numbers from ${_OS_REL_NUM} separated for use with
+# the C preprocessor.  Using cut(1) is kind of a hack, but at least it's a
+# clean one.
+_OS_REL_NUM_MAJOR=`echo "${_OS_REL_NUM}" | cut -f1 -d'.'`
+_OS_REL_NUM_MINOR=`echo "${_OS_REL_NUM}" | cut -f2 -d'.'`
+
+AR=''			# Archive library command (generally ar(1))
+ARFLAGS=''		# Flags for $AR
+LD=''			# Shared library command (usually ld(1))
+LDOPTS=''		# More options for shared library generator
+SHAREDLIB_EXT=''	# Extension for shared libraries (usually 'so')
+
+OPT_FLAGS=''		# Compiler optimization flags
+
+DSOREGFILE=''
+DSOVERSION=''
+DSOVERSIONOPTS=''
+ABI_LIST=''		# List of supported ABIs on a given platform
+PLATFORM=''		# Platform name
+
+# Depending on the host type, set various command options and such.
+case $host in
+    # SGI running IRIX [56].*.
+    mips-sgi-irix*)
+        # Set compiler flags and the location of $DSOREGFILE depending on
+        # $ABI.
+        if test "$ABI" = "64" ; then
+            DSOREGFILE='/usr/lib64/so_locations'
+            OPT_FLAGS='-OPT:Olimit=2000'
+        elif test "$ABI" = "N32" ; then
+            DSOREGFILE='/usr/lib32/so_locations'
+            OPT_FLAGS='-OPT:Olimit=2000'
+        elif test "$ABI" = "O32" ; then
+            DSOREGFILE='/usr/lib/so_locations'
+            OPT_FLAGS='-Olimit 2000'
+        fi
+
+        AR='${CXX}'
+        ARFLAGS='-ar -WR,-v -o'
+        CFLAGS="$CFLAGS"
+        CXXFLAGS="-ptv $CXXFLAGS"
+        INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
+        LD='${CXX} -shared'
+        LDFLAGS="$LDFLAGS"
+        _LD_REGOPTS='-check_registry ${DSOREGFILE}'
+        LDOPTS="$LDOPTS -all ${_LD_REGOPTS}"
+        SHAREDLIB_EXT='so'
+
+        DSOVERSION='sgi4.0'
+        DSOVERSIONOPTS='-set_version ${DSOVERSION}'
+
+        ABI_LIST='64_M4 64_M3 N32_M4 N32_M3'
+        PLATFORM='SGI'
+
+        AC_DEFINE(VJ_OS_SGI,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
+        AC_DEFINE(_BSD_TYPES,)
+
+        if test ${_OS_REL_NUM_MAJOR} -lt 6 ; then
+            AC_DEFINE(IRIXREL, "IRIX5")
+        else
+            AC_DEFINE(IRIXREL, "IRIX6")
+        fi
+        ;;
+    # HP PA-RISC machine running HP-UX 10.20.
+    hppa*hpux10.20)
+        AR='ar'
+        ARFLAGS='r'
+        CFLAGS="-Aa $CFLAGS"
+        CXXFLAGS="+p $CXXFLAGS"
+        LD='ld'
+        LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
+        LDOPTS='-b'
+        OPT_FLAGS='+inline_level 3'
+        SHAREDLIB_EXT='sl'
+
+        # We have to use POSIX threads on HP-UX.
+        if test "x${_thread_pkg}" != "xPOSIX" ; then
+            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            _thread_pkg='POSIX'
+        fi
+
+        AC_DEFINE(VJ_OS_HPUX,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
+        AC_DEFINE(_HPUX_SOURCE,)
+        AC_DEFINE(_INCLUDE_TERMIO,)
+        AC_DEFINE(_CMA_NOWRAPPERS_,)
+        AC_DEFINE(notdef,)
+        ABI_LIST=''
+        PLATFORM='HP'
+        ;;
+    # DEC Alpha running Digital UNIX 4.0.
+    alpha-[a-z]*-osf4.0)
+        AC_DEFINE(VJ_OS_DUX,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
+        PLATFORM='alpha-DUX'
+        ;;
+    # i386-class machine running FreeBSD.
+    i386-[a-z]*-freebsd*)
+        AC_DEFINE(VJ_OS_FreeBSD,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
+        ABI_LIST='AOUT ELF'
+        PLATFORM='i386-FBSD'
+        ;;
+    # Unkown operating system (to config.guess).
+    *-unknown)
+        AC_DEFINE(VJ_OS_GENERIC,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
+        PLATFORM='UNKNOWN'
+        ;;
+esac
+
+# -----------------------------------------------------------------------------
+# Checks for programs.
+# -----------------------------------------------------------------------------
+
+_vjsave_CFLAGS="$CFLAGS"
+_vjsave_CXXFLAGS="$CXXFLAGS"
+
+# On HP-UX, we have to use the aCC C++ compiler.
+if test "$PLATFORM" = "HP" ; then
+    AC_CHECK_PROG(CXX, aCC, aCC,
+        AC_MSG_ERROR(*** The library requires the HP-UX aCC C++ compiler ***))
+# On IRIX, we have to use cc and CC (not gcc or g++).
+elif test "$PLATFORM" = "SGI" ; then
+    AC_CHECK_PROG(CC, cc, cc,
+        AC_MSG_ERROR(*** The library requires the IRIX cc C compiler ***))
+    AC_CHECK_PROG(CXX, CC, CC,
+        AC_MSG_ERROR(*** The library requires the IRIX CC C++ compiler ***))
+fi
+
+CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+CXXFLAGS="$CXXFLAGS ${_EXTRA_FLAGS}"
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_CPP
+AC_PROG_CXXCPP
+
+CFLAGS="${_vjsave_CFLAGS}"
+CXXFLAGS="${_vjsave_CXXFLAGS}"
+
+# Check for the JDK (specifically try to find javac(1) in $JDK_HOME).
+JAVAC=''
+JAR=''
+
+# In checking for javac(1), "${JDK_HOME}/bin" is added to the script's $PATH
+# variable.  This directory may already be in the path, but this ensures that
+# javac(1) will be found by AC_PATH_PROG().
+_vjsave_PATH="$PATH"
+PATH="$PATH:${JDK_HOME}/bin"
+AC_PATH_PROG(JAVAC, javac)
+PATH="${_vjsave_PATH}"
+
+# If $JAVAC was not set by AC_PATH_PROG(), try to find the JDK installation
+# directory using the list in $JDK_HOME_ALT_LIST.
+if test -z "$JAVAC" ; then
+    # Add the default value for $JDK_HOME (found in ${_JDK_HOME_DEFAULT}) to
+    # the list of alternate installation directories in case the user gave
+    # a different value for $JDK_HOME on the command line.
+    if test "x$JDK_HOME" != "x${_JDK_HOME_DEFAULT}" ; then
+        _JDK_HOME_ALT_LIST="${_JDK_HOME_DEFAULT} ${_JDK_HOME_ALT_LIST}"
+    fi
+
+    # Loop over the list of possible alternate installation directories for
+    # the JDK found in ${_JDK_HOME_ALT_LIST}.
+    for _JDK_HOME_TMP in ${_JDK_HOME_ALT_LIST} ; do
+        # Only check the directory in ${_JDK_HOME_TMP} if it is not the same
+        # as the path given by the user on the command line.
+        if test "${_JDK_HOME_TMP}" != "$JDK_HOME" ; then
+            AC_MSG_CHECKING(for javac in ${_JDK_HOME_TMP})
+
+            # If an executable javac is found in ${_JDK_HOME_TMP}, set $JAVAC
+            # to the full path to it, save ${_JDK_HOME_TMP} in $JDK_HOME and
+            # quit looping.
+            if test -x "${_JDK_HOME_TMP}/bin/javac" ; then
+                JAVAC="${_JDK_HOME_TMP}/bin/javac"
+                JDK_HOME="${_JDK_HOME_TMP}"
+                AC_MSG_RESULT(yes)
+                break
+            # Otherwise, print "no" and go on to the next directory.
+            else
+                AC_MSG_RESULT(no)
+            fi
+        fi
+    done
+fi
+
+BUILD_GUI='N'
+
+# If there is still no value in $JAVAC, then warn that the GUI will not be
+# built.
+if test -z "$JAVAC" ; then
+    AC_MSG_WARN(*** The GUI requires javac -- it will not be built ***)
+# Otherwise, set $JAR to the path to jar(1) and continue.
+else
+    JAR="${JDK_HOME}/bin/jar"
+    BUILD_GUI='Y'
+fi
+
+AC_PROG_INSTALL
+AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \${scriptdir}/mtree.pl)
+AC_PROG_MAKE_SET
+dnl # AC_PROG_RANLIB
+
+# -----------------------------------------------------------------------------
+# Checks for libraries.
+# -----------------------------------------------------------------------------
+
+THREADS=''
+
+# Test for libpthread or for libcma if libpthread is not present.
+# If the library is found, check for pthread_kill().  If it is present,
+# Draft 10 (the "final" draft) of the POSIX threads standard is in place.  If
+# not, Draft 4 is available.
+if test "x${_thread_pkg}" = "xPOSIX" ; then
+    AC_CHECK_LIB(pthread, pthread_create,
+        AC_CHECK_HEADER(pthread.h,
+            [ THREADS='POSIX'; LIBS="$LIBS -lpthread"; ],
+            AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
+
+    # On HP-UX 10.20, the pthreads library is in the cma library rather than
+    # pthreads, so test for that if $THREADS was not set above.
+    if test -z "$THREADS" ; then
+        AC_CHECK_LIB(cma, pthread_create,
+            AC_CHECK_HEADER(pthread.h,
+                [ THREADS='POSIX'; LIBS="$LIBS -lcma"; ],
+                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)),
+            AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***))
+    fi
+
+    # If $THREADS is equal to "POSIX" at this point, then the pthread
+    # libraries needed are in $LIBS, so now we make a check for the draft
+    # revision being used.  This is done by determining if pthread_kill() is
+    # in the library.  If it is, Draft 10 is in use.  Otherwise, assume it is
+    # Draft 4.
+    if test "$THREADS" = "POSIX" ; then
+        AC_CACHE_CHECK(POSIX threads draft revision,
+            ac_cv_pthread_version,
+            AC_TRY_LINK([ #include <pthread.h> ],
+                [ pthread_t t; pthread_kill(t, 1); ],
+                ac_cv_pthread_version='Draft 10',
+                ac_cv_pthread_version='Draft 4'))
+
+        if test "$ac_cv_pthread_version" = "Draft 10" ; then
+            AC_DEFINE(_PTHREADS_DRAFT_10,)
+        else
+            AC_DEFINE(_PTHREADS_DRAFT_4,)
+        fi
+
+        # Define the default thread scope depending on the platform.  On IRIX,
+        # only process scope is avaiable.  Other systems may support system
+        # scope.
+        if test "$PLATFORM" = "SGI" ; then
+            AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
+        else
+            AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
+        fi
+    fi
+
+# If we are not using POSIX threads, we must be using the SGI IPC model, but
+# we test ${_thread_pkg} just to be sure it is set right.
+elif test "x${_thread_pkg}" = "xSGI_IPC" ; then
+    AC_CHECK_HEADERS(sys/prctl.h,
+        THREADS='SGI_IPC',
+        AC_MSG_WARN(*** SGI IPC threading will not be used (no headers found) ***))
+fi
+
+#---------------------------------------
+# SHARED MEM
+# SYNC PRIMS
+#---------------------------------------
+SYNC_SYS=''			# POSIX, SGI_IPC
+SHMEM_SYS=''			# SGI_IPC
+THREAD_SYS=''			# POSIX, SGI_IPC
+
+# Define various CPP macros depending on which threads implementation will
+# be used.  If no implementation was defined above, exit configure.
+if test "$THREADS" = "POSIX" ; then
+    # Do not define _POSIX_C_SOURCE here because it will cause problems when
+    # compiling on IRIX.  Instead, define that in the source files where
+    # appropriate.
+    AC_DEFINE(VJ_USE_PTHREADS,)
+    AC_DEFINE(_THREAD_SAFE,)
+    AC_DEFINE(RWSTD_MULTI_THREAD,)
+    AC_DEFINE(RW_MULTI_THREAD,)
+    AC_DEFINE(_REENTRANT,)
+
+    # Set to POSIX THREADING
+    THREAD_SYS="POSIX"
+
+    # Nothing for these at this time.
+    SYNC_SYS='POSIX'
+    SHMEM_SYS=''
+elif test "$THREADS" = "SGI_IPC" ; then
+    AC_DEFINE(VJ_SGI_IPC,)
+
+    # Set to SGI_IPC threading
+    THREAD_SYS="SGI_IPC"
+
+    SYNC_SYS='SGI_IPC'
+    SHMEM_SYS='SGI_IPC'
+elif test -z "$THREADS" ; then
+    AC_MSG_ERROR(No threading package defined!)
+fi
+
+#------------------------------------------
+# OPEN GL
+#------------------------------------------
+OPENGL_API=''			# 'Y' then we are using OpenGL
+
+_LIBOPENGL=''
+_SYSTEM_OPENGL=''
+
+# Test for the OpenGL library if the OpenGL API was enabled.
+if test "x${_enable_opengl}" = "xyes" ; then
+    # Save these values in case they need to be restored later.
+    _vjsave_CFLAGS="$CFLAGS"
+    _vjsave_CPPFLAGS="$CPPFLAGS"
+    _vjsave_INCLUDES="$INCLUDES"
+    _vjsave_LDFLAGS="$LDFLAGS"
+
+    # Add the user-specified OpenGL installation directory to these paths.
+    # Ensure that /usr/include and /usr/lib are not included multiple times
+    # if $OGLROOT is "/usr".
+    if test "x${OGLROOT}" != "x/usr" ; then
+        CPPFLAGS="$CPPFLAGS -I${OGLROOT}/include"
+        INCLUDES="$INCLUDES -I${OGLROOT}/include"
+        LDFLAGS="-L${OGLROOT}/lib${LIBBITSUF} $LDFLAGS"
+    fi
+
+    CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+
+    # On HP-UX, we have to compile the test code with aCC (which is required
+    # by an above test) because the HP-UX OpenGL 1.1 implementation mandates
+    # this.
+    if test "$PLATFORM" = "HP" ; then
+        _vjsave_CC="$CC"
+        _vjsave_LIBS="$LIBS"
+        CC="$CXX"
+        LIBS="$LIBS -lGL"
+
+        # Check the cache in case this test was run previously and if not,
+        # compile the given code and try to link it against the GL library.
+        # We don't need to test for the existence of GL/gl.h after linking
+        # because the test program already includes it.
+        AC_CACHE_CHECK(for glEnable in -lGL, ac_cv_glEnable_available,
+            AC_TRY_LINK([#include <GL/gl.h>], [glEnable(GL_CULL_FACE)],
+                ac_cv_glEnable_available='yes',
+                [ LIBS="${_vjsave_LIBS}";
+                  AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***) ] ))
+
+        # If the library was found, add the OpenGL API object files to the
+        # files to be compiled and enable the OpenGL API compile-time option.
+        if test "$ac_cv_glEnable_available" = "yes" ; then
+            OPENGL_API="Y"
+            AC_DEFINE(VJ_API_OPENGL,)
+        fi
+
+        CC="${_vjsave_CC}"
+    else
+        # If the OpenGL library was found, add the API object files to the
+        # files to be compiled and enable the OpenGL API compile-time option.
+        AC_CHECK_LIB(GL, glEnable,
+            AC_CHECK_HEADER(GL/gl.h,
+                [ OPENGL_API="Y";
+                  AC_DEFINE(VJ_API_OPENGL,) ],
+                AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***)),
+            AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***))
+    fi
+
+    # Restore $CFLAGS and $CPPFLAGS now that we are done testing.
+    CFLAGS="${_vjsave_CFLAGS}"
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
+
+    # If OpenGL API files were added, define this extra stuff that is used
+    # in some Makefiles.
+    if test ! -z "$OPENGL_API" ; then
+        _LIBOPENGL="-L${OGLROOT} -lGLU -lGL -lXext"
+
+        if test "$PLATFORM" = "HP" ; then
+            _SYSTEM_OPENGL="${_LIBOPENGL} -lX11"
+        else
+            if test "$ABI" = "64" ; then
+                _SYSTEM_OPENGL="-limage ${_LIBOPENGL} -lXmu -lX11"
+            elif test "$ABI" = "N32" ; then
+                _SYSTEM_OPENGL="-limage ${_LIBOPENGL} -lXmu -lX11"
+            elif test "$ABI" = "O32" ; then
+                _SYSTEM_OPENGL="-lmpc -limage -lGLw ${_LIBOPENGL} -lfpe -lXm -lXt -lXmu -lX11 -lmalloc"
+            fi
+        fi
+    # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
+    # that no OpenGL stuff in included in them.
+    else
+        INCLUDES="${_vjsave_INCLUDES}"
+        LDFLAGS="${_vjsave_LDFLAGS}"
+    fi
+fi
+
+#----------------------------------------------------
+# PERFORMER
+#----------------------------------------------------
+PERFORMER_API=''		# 'Y' then we are using Performer
+
+# Test for the Performer library if the Performer API was enabled.
+if test "x${_enable_perf}" = "xyes" ; then
+    _vjsave_CFLAGS="$CFLAGS"
+    _vjsave_INCLUDES="$INCLUDES"
+    _vjsave_LDFLAGS="$LDFLAGS"
+
+    # Ensure that /usr/include and /usr/lib are not included multiple times
+    # if $PFROOT is "/usr".
+    if test "x${PFROOT}" != "x/usr" ; then
+        INCLUDES="$INCLUDES -I\${PFROOT}/include"
+        LDFLAGS="-L\${PFROOT}/lib\${LIBBITSUF} $LDFLAGS"
+    fi
+
+    CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
+
+    # If the Performer library was found, add the API object files to the
+    # files to be compiled and enable the Performer API compile-time option.
+    AC_CHECK_LIB(pf, pfInit,
+        AC_CHECK_HEADER(Performer/pf.h,
+            PERFORMER_API="Y";	\
+            _PFOGLLIB='-ignore_unresolved -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
+            AC_DEFINE(VJ_API_PERFORMER,),
+            AC_MSG_WARN(*** Performer API will not be used (pfChannel.h not found) ***)),
+        AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
+
+    # Restore $CFLAGS now that we are done testing.
+    CFLAGS="${_vjsave_CFLAGS}"
+
+    # No Performer API files were added, so restore $INCLUDES and $LDFLAGS
+    # so that no OpenGL stuff in included in them.
+    if test -z "$PERFORMER_API" ; then
+        INCLUDES="${_vjsave_INCLUDES}"
+        LDFLAGS="${_vjsave_LDFLAGS}"
+    fi
+fi
+
+# -----------------------------------------------------------------------------
+# Checks for header files.
+# -----------------------------------------------------------------------------
+AC_PATH_X
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
+                 sys/time.h termio.h unistd.h sys/z8530.h sys/stdsyms.h)
+
+dnl # All of the above header file checks may not be necessary ...
+
+# -----------------------------------------------------------------------------
+# Checks for typedefs, structures, and compiler characteristics.
+# -----------------------------------------------------------------------------
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_TYPE_SIGNAL
+AC_HEADER_TIME
+AC_CHECK_TYPE(u_int, unsigned int)
+
+# -----------------------------------------------------------------------------
+# Checks for library functions.
+# -----------------------------------------------------------------------------
+AC_CHECK_FUNCS(gettimeofday socket strdup strerror strtod sginap)
+
+dnl # All of the above function checks may not be necessary ...
+
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
+if test "$PLATFORM" = "SGI" ; then
+    CFLAGS="$CFLAGS -nostdinc -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+    CXXFLAGS="$CXXFLAGS -nostdinc -woff 3322 -w2"
+fi
+
+DEPENDFLAGS=""
+DEPEND_EXTRAS=""
+
+# For makedepend(1) to work properly on HP-UX with aCC, we have to include
+# these extra paths.
+if test "$PLATFORM" = "HP" ; then
+    _aCC_ROOT="/opt/aCC"
+    DEPEND_EXTRAS="-I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
+fi
+
+dnl # This build directory stuff is not presently being used.
+if test -z "${_vj_builddir}" ; then
+    builddir='${top_srcdir}/lib'
+else
+    if test -d "${_vj_builddir}" ; then
+        _old_wd=`pwd`
+        cd "${_vj_builddir}"
+        builddir=`pwd`
+        cd "${_old_wd}"
+    else
+        AC_MSG_ERROR(Build directory ${_vj_builddir} does not exist!)
+    fi
+fi
+
+# $srcdir is the root directory of the vjlib source tree.  To get a value for
+# $VJROOT_ABS, we cd there and save the value of running pwd.  Then return to
+# the directory where configure is being run ($topdir).
+topdir=`pwd`
+cd "$srcdir"
+VJROOT_ABS=`pwd`
+cd "$topdir"
+
+# Define the base path to the source directory using ${VJROOT_ABS} as an
+# alternative to using ${srcdir}.
+VJ_SRCDIR='${VJROOT_ABS}'
+
+# Variables set in Makefiles found in the test tree.  All variables listed are
+# for use only in the Makefile.in's found in that tree unless otherwise noted.
+# They are used in the following way:
+#
+#     * TEST_VJ_LIBS_BASIC: The basic VR Juggler library.
+#     * TEST_VJ_LIBS_BASIC_SUBST: Used only in the top-level Makefile.in.  It
+#       is used when generating Makefiles in the test directory tree during
+#       the installation process.  Some variables in its assigned value are
+#       not interpolated until that time (making it different from
+#       $TEST_VJ_LIBS_BASIC whose varabiles are interpolated at assignment
+#       time).
+#     * TEST_VJ_LIBS_GL: The VR Juggler OpenGL API library.
+#     * TEST_VJ_LIBS_PF: The VR Juggler Performer API library.
+#     * TEST_LIBS_BASIC: The _most basic_ basic libraries needed for compiling
+#       (e.g., -lC).
+#     * TEST_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker flags
+#       needed for compiling.  These are put after those listed in the
+#       previous variables in the compile line.
+#     * TEST_EXTRA_LIBS_BASIC_SUBST: Used only in the top-level Makefile.in.
+#       It is used in the same way as $TEST_VJ_LIBS_BASIC_SUBST but is for the
+#       $TEST_EXTRA_LIBS_BASIC variable.
+#     * TEST_VJ_LIBS_GL: The OpenGL libraries needed for compiling with the
+#       OpenGL API.
+#     * TEST_VJ_LIBS_GL_SUBST: Used only in the top-level Makefile.in.  It is
+#       used in the same way as $TEST_VJ_LIBS_BASIC_SUBST but is for the
+#       $TEST_VJ_LIBS_GL variable.
+#     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling with the
+#       Performer API.
+#
+TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+TEST_VJ_LIBS_GL="-lJuggler_ogl"
+TEST_VJ_LIBS_PF="-lJuggler_pf"
+TEST_LIBS_BASIC="-B dynamic -lm -lC"
+TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
+TEST_EXTRA_LIBS_BASIC_SUBST="$LDFLAGS $LIBS"
+TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
+TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} ${_SYSTEM_OPENGL}"
+TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
+
+dnl # AC_SUBST(builddir)
+AC_SUBST(topdir)
+AC_SUBST(VJROOT_ABS)
+AC_SUBST(VJ_SRCDIR)
+
+AC_SUBST(AR)
+AC_SUBST(ARFLAGS)
+AC_SUBST(CFLAGS)
+AC_SUBST(CXXFLAGS)
+AC_SUBST(DEPENDFLAGS)
+AC_SUBST(DEPEND_EXTRAS)
+AC_SUBST(INCLUDES)
+AC_SUBST(LD)
+AC_SUBST(LIBS)
+AC_SUBST(LDOPTS)
+AC_SUBST(OPT_FLAGS)
+AC_SUBST(SHAREDLIB_EXT)
+
+AC_SUBST(ABI)
+AC_SUBST(ISA)
+AC_SUBST(ABI_LIST)
+AC_SUBST(LIBBITSUF)
+AC_SUBST(PLATFORM)
+AC_SUBST(DSOREGFILE)
+AC_SUBST(DSOVERSION)
+AC_SUBST(DSOVERSIONOPTS)
+
+AC_SUBST(JDK_HOME)
+AC_SUBST(JAVAC)
+AC_SUBST(JAR)
+AC_SUBST(BUILD_GUI)
+
+AC_SUBST(OGLROOT)
+AC_SUBST(PFROOT)
+
+AC_SUBST(OPENGL_API)
+AC_SUBST(PERFORMER_API)
+
+AC_SUBST(SHMEM_SYS)
+AC_SUBST(SYNC_SYS)
+AC_SUBST(THREAD_SYS)
+
+AC_SUBST(TEST_VJ_LIBS_BASIC)
+AC_SUBST(TEST_VJ_LIBS_BASIC_SUBST)
+AC_SUBST(TEST_VJ_LIBS_GL)
+AC_SUBST(TEST_VJ_LIBS_PF)
+AC_SUBST(TEST_LIBS_BASIC)
+AC_SUBST(TEST_EXTRA_LIBS_BASIC)
+AC_SUBST(TEST_EXTRA_LIBS_BASIC_SUBST)
+AC_SUBST(TEST_EXTRA_LIBS_GL)
+AC_SUBST(TEST_EXTRA_LIBS_GL_SUBST)
+AC_SUBST(TEST_EXTRA_LIBS_PF)
+
+# -----------------------------------------------------------------------------
+# Final file generation step.
+# -----------------------------------------------------------------------------
+AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile
+          Input/Makefile Input/vjGlove/Makefile Input/vjInput/Makefile
+          Input/vjPosition/Makefile Input/InputManager/Makefile
+          Input/ibox/Makefile Kernel/Makefile Kernel/Pf/Makefile
+          Input/vjKeyboard/Makefile Input/vjSim/Makefile Input/vjGesture/Makefile
+          Kernel/GL/Makefile SharedMem/Makefile Sync/Makefile
+          Threads/Makefile Environment/Makefile Performance/Makefile
+          test/Makefile test/CfgTest/Makefile test/Matrix/Makefile
+          test/Sync/Makefile test/Quat/Makefile test/input/Makefile
+          test/ogl/Makefile test/ogl/cubes/Makefile test/ogl/wand/Makefile
+	  test/ogl/simpleGlove/Makefile
+          test/pfNav/Makefile test/testDynamicCastSTL/Makefile
+          test/threads/Makefile GUI/Makefile)
