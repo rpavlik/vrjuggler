@@ -1,0 +1,34 @@
+package id2mf3rd6gte1fgd6gxgik7;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id1whbsd6i83xp3d6i89ct4.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#gadget:oiref> 
+*/
+class reference3 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#gadget::ProxyConstructor#gadget::ProxyConstructorBase:oiref>=111,260,111,131:oigroup>
+<oigroup:<oiref:design#Class#id6nn1jd6gte1fgd6gxgphz.diagram:oiref>=182,730,157,202,1:oigroup>
+<oigroup:<oiref:design#Class#id1whbsd6i83xp3d6i89ct4.diagram:oiref>=30,20,165,169,1:oigroup>
+<oigroup:<oiref:design#Class#id1rnund6gte1fgd6gxgpqq.diagram:oiref>=10,730,170,52,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::ProxyFactory#mConstructors:oiref>=318,84,210,84:oigroup>
+
+
+*/
+class __positions {
+}

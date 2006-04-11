@@ -1,0 +1,42 @@
+package id2dx08d6gs390yd6gt2nvb;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#userPfApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#userOglApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}/**
+@__ref <oiref:cpp#Class#userOpenSGApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#userOglApp:oiref>=607,104,153,183,1:oigroup>
+<oigroup:<oiref:design#Class#id2cx5d6gs390yd6gt2rvd.diagram:oiref>=83,83,64,52,1:oigroup>
+<oigroup:<oiref:design#Class#id1z8gkd6gs390yd6gt2rru.diagram:oiref>=1,1,69,111,1:oigroup>
+<oigroup:<oiref:design#Class#id1whbsd6i83xp3d6i89ct4.diagram:oiref>=741,368,165,115,1:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=472,269,122,170,1:oigroup>
+
+*/
+class __positions {
+}
