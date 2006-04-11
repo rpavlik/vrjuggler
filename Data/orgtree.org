@@ -1,0 +1,48 @@
+Begin "Zelda"
+    "Include File"
+    Begin "Displays"
+        "Simulator Display"
+	"Surface Display"
+        "Display System"
+    End
+    Begin "Input"
+        "Input Manager"
+        Begin "Proxies and Aliases"
+            "Proxy Alias"
+            "Position Proxy"
+            "Analog Proxy"
+            "Digital Proxy"
+            "Glove Proxy"
+            "Gesture Proxy"
+	    "Keyboard Proxy"
+        End
+        Begin "Input Devices"
+            "Keyboard"
+            "Flock"
+            "IBox"
+            "CyberGlove"
+            "3D Mouse"
+            "Dummy Position"
+        End
+        Begin "Simulated Devices"
+            "Position Simulator"
+            "Analog Simulator"
+            "Digital Simulator"
+            "Glove Gesture Simulator"
+        End
+    End
+    "Juggler User"
+
+    Begin "API-specific"
+        "Performer API"
+    End
+    
+    Begin "Environment Manager"
+        "Environment Manager"
+        "Performance Measurements"
+        "EM Connection"
+    End
+
+    Begin "*"
+    End
+End

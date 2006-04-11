@@ -1,0 +1,18 @@
+# This file defines the specification for the Data directory tree for the VR
+# Juggler installation.
+#
+# $Id$
+
+/set type=dir gname=vrjuggler mode=0775
+.
+    Data
+	DescHelp
+	..
+	configFiles
+	..
+	gesture
+	..
+	models
+	..
+    ..
+..

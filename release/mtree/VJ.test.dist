@@ -1,0 +1,48 @@
+# This file defines the specification for the test code directory tree for
+# the VR Juggler installation.
+#
+# $Id$
+
+/set type=dir gname=vrjuggler mode=0775
+.
+    test
+	CfgTest
+	..
+	GLWindow
+	..
+	Math
+	..
+	Matrix
+	..
+	Mempool
+	..
+	Quat
+	..
+	Sync
+	..
+	Win32k
+	..
+	input
+	..
+	ogl
+	    combo
+	    ..
+	    cubes
+	    ..
+	    simpleGlove
+	    ..
+	    torus
+	    ..
+	    wand
+	    ..
+	    glove
+	    ..
+	..
+	pfNav
+	..
+	testDynamicCastSTL
+	..
+	threads
+	..
+    ..
+..
