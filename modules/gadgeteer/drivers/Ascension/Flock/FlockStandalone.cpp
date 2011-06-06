@@ -193,6 +193,10 @@ bool FlockStandalone::open()
       //   - Set the port attributes to use
       try
       {
+         // Set the basic port attributes to use
+         mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);  // Changes apply immediately
+         mSerialPort->clearAll();
+         mSerialPort->setBlocking(true);              // Open in blocking mode
          mSerialPort->open();
       }
       catch (vpr::IOException&)
@@ -207,12 +211,7 @@ bool FlockStandalone::open()
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
             << "  Configuring port attributes\n" << vprDEBUG_FLUSH;
 
-         // Set the basic port attributes to use
-         mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);  // Changes apply immediately
-         mSerialPort->clearAll();
-         mSerialPort->setBlocking(true);              // Open in blocking mode
          mSerialPort->setCanonicalInput(false);              // enable binary reading and timeouts
-
          mSerialPort->setTimeout(10);                       // Set to 1 inter-byte read second timeout
          mSerialPort->setRead(true);                        // Allow reading from port
          mSerialPort->setLocalAttach(true);                 // Say we are directly attached
