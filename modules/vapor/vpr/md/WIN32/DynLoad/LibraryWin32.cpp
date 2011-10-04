@@ -50,30 +50,42 @@
 namespace vpr
 {
 
+	namespace
+	{
+		void hmodule_unloader(HMODULE lib) {
+			 if ( FreeLibrary(lib) == 0 )
+			   {
+				  std::ostringstream msg_stream;
+				  msg_stream << "Failed to unload: "
+							 << vpr::Error::getCurrentErrorMsg();
+				  throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
+			   }
+		}
+	}
 LibraryWin32::LibraryWin32(const std::string& name)
    : mName(name)
-   , mLibrary(NULL)
+   , mLibrary()
 {
    ;
 }
 
 LibraryWin32::LibraryWin32()
    : mName("")
-   , mLibrary(NULL)
+   , mLibrary()
 {
    ;
 }
 
 LibraryWin32::LibraryWin32(const LibraryWin32& lib)
    : mName("")
-   , mLibrary(NULL)
+   , mLibrary()
 {
    copy(lib);
 }
 
 LibraryWin32::~LibraryWin32()
 {
-   if ( NULL != mLibrary )
+   if ( mLibrary )
    {
       try
       {
@@ -92,7 +104,7 @@ LibraryWin32::~LibraryWin32()
 void LibraryWin32::load()
 {
    // Make sure a library object has not already been loaded.
-   if ( NULL != mLibrary )
+   if ( mLibrary )
    {
       try
       {
@@ -107,9 +119,9 @@ void LibraryWin32::load()
       }
    }
 
-   mLibrary = LoadLibrary(mName.c_str());
+   mLibrary.reset(LoadLibrary(mName.c_str()), &hmodule_unloader);
 
-   if ( NULL == mLibrary )
+   if ( !mLibrary )
    {
       std::ostringstream msg_stream;
       msg_stream << "Failed to load '" << mName << "': "
@@ -120,35 +132,25 @@ void LibraryWin32::load()
 
 void LibraryWin32::unload()
 {
-   if ( NULL == mLibrary )
+   if ( !mLibrary )
    {
       throw vpr::IOException("No library to unload", VPR_LOCATION);
    }
 
-   if ( FreeLibrary(mLibrary) == 0 )
-   {
-      std::ostringstream msg_stream;
-      msg_stream << "Failed to unload '" << mName << "': "
-                 << vpr::Error::getCurrentErrorMsg();
-      throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
-   }
-   else
-   {
-      mLibrary = NULL;
-   }
+   mLibrary.reset();
 }
 
 void* LibraryWin32::findSymbol(const std::string& symbolName)
 {
    // If the library has not been loaded yet, throw an exception.
-   if ( NULL == mLibrary )
+   if ( !mLibrary )
    {
       std::ostringstream msg_stream;
       msg_stream << "Library not loaded: '" << mName << "'";
       throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
    }
 
-   return GetProcAddress(mLibrary, symbolName.c_str());
+   return GetProcAddress(mLibrary.get(), symbolName.c_str());
 }
 
 void* LibraryWin32::findSymbolAndLibrary(const std::string& symbolName,

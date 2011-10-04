@@ -38,6 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
 #include <cstdlib>
 #include <string>
 
@@ -173,6 +175,7 @@ public:
                                      LibraryWin32& lib);
 
 protected:
+	typedef boost::shared_ptr<boost::remove_pointer<HMODULE>::type> hmodule_ptr;
    /**
     * Makes a copy of the given vpr::LibraryWin32 into this object.
     */
@@ -184,7 +187,7 @@ protected:
 
 private:
    std::string mName;      /**< The name of the library */
-   HMODULE     mLibrary;   /**< The loaded library handle */
+   hmodule_ptr     mLibrary;   /**< The loaded library handle */
 };
 
 } // End of vpr namespace
