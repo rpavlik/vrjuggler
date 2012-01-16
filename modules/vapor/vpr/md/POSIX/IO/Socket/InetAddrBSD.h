@@ -44,10 +44,10 @@
 #include <vector>
 
 #include <vpr/vprTypes.h>
+#include <vpr/IO/Socket/Socket.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/IO/Socket/UnknownHostException.h>
 #include <vpr/Util/IllegalArgumentException.h>
-
 
 // XXX: Extend to work with IPv6.
 
