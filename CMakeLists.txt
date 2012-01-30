@@ -19,6 +19,12 @@ include(scripts/cmake/VRJugglerSuiteDefaultOptions.cmake)
 
 option(BUILD_SONIX "Should we build the Sonix library?" ON)
 
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DJUGGLER_DEBUG -D_DEBUG)
+else()
+    add_definitions(-DJUGGLER_OPT)
+endif()
+
 ###
 # Recurse into subdirectories
 ###

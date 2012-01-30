@@ -48,7 +48,6 @@
 #include <vpr/IO/Socket/UnknownHostException.h>
 #include <vpr/Util/IllegalArgumentException.h>
 
-
 // XXX: Extend to work with IPv6.
 
 namespace vpr
