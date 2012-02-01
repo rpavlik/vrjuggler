@@ -33,7 +33,7 @@ add_subdirectory(Elexol/Ether24)
 #add_subdirectory(EssentialReality/P5Glove)
 add_subdirectory(Fakespace/PinchGlove)
 add_subdirectory(Immersion/IBox)
-#add_subdirectory(Intersense/IntersenseAPI)
+add_subdirectory(Intersense/IntersenseAPI)
 add_subdirectory(Intersense/IS900)
 
 check_include_file_cxx(termios.h HAVE_TERMIOS_H)
