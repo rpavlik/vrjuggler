@@ -1,3 +1,4 @@
+message(STATUS "SONIX_BUILD_OPENAL enabled, so verifying dependencies for that plugin")
 find_package(ALUT REQUIRED)
 
 include_directories(${ALUT_INCLUDE_DIRS})
