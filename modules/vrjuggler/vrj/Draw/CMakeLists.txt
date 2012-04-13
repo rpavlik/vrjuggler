@@ -11,9 +11,9 @@ endif()
 #	endif()
 #endif()
 
-#option(VRJ_BUILD_WITH_PERFORMER "Build the OpenGL Performer draw manager?" OFF)
-#if(VRJ_BUILD_WITH_PERFORMER)
-#	add_subdirectory(Pf)
-#endif()
+option(VRJ_BUILD_WITH_PERFORMER "Build the OpenGL Performer draw manager?" OFF)
+if(VRJ_BUILD_WITH_PERFORMER)
+	add_subdirectory(Pf)
+endif()
 
 
