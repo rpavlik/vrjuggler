@@ -26,12 +26,14 @@ set(SOURCES
 	../../../vrj_pf.rc)
 
 find_package(Performer REQUIRED)
-include_directories(${PERFORMER_INCLUDE_DIR})
+include_directories(${PERFORMER_INCLUDE_DIRS})
 
 add_library(vrj_pf SHARED ${HEADERS} ${SOURCES})
 target_link_libraries(vrj_pf
 	vrj
-	${PERFORMER_LIBRARIES})
+	${PERFORMER_LIBRARIES}
+	${PERFORMER_PFUI_LIBRARY}
+	${PERFORMER_PFDU_UTIL_LIBRARY})
 
 set_target_properties(vrj_pf PROPERTIES FOLDER "${VRJUGGLERSUITE_CORELIB_PROJECT_FOLDER}")
 
