@@ -22,13 +22,20 @@ set(SOURCES
 
 	../../../vrj_d3d.rc)
 
-find_package(Direct3D REQUIRED)
-include_directories(${DIRECT3D_INCLUDE_DIRS})
+find_package(DirectX REQUIRED)
+if(NOT (DIRECTX_D3D9_LIBRARY AND DIRECTX_D3DX9_LIBRARY AND DIRECTX_D3DXOF_LIBRARY))
+	message(FATAL_ERROR "Direct3D not found but Direct3D draw manager enabled!")
+endif()
+include_directories(${DIRECTX_INCLUDE_DIRS})
 
 add_library(vrj_d3d SHARED ${HEADERS} ${SOURCES})
 target_link_libraries(vrj_d3d
 	vrj
-	${DIRECT3D_LIBRARIES})
+	${DIRECTX_D3DXOF_LIBRARY}
+	${DIRECTX_DXGUID_LIBRARY}
+	${DIRECTX_D3DX9_LIBRARIES}
+	${DIRECTX_D3D9_LIBRARY}
+	winmm)
 
 set_target_properties(vrj_d3d PROPERTIES FOLDER "${VRJUGGLERSUITE_CORELIB_PROJECT_FOLDER}")
 
