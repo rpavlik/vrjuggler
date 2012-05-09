@@ -2,25 +2,14 @@ cmake_minimum_required(VERSION 2.6.2)
 project(Gadgeteer)
 
 ###
+# CMake modules
+###
+include("${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/VRJugglerSuiteDefaultOptions.cmake")
+
+###
 # Version
 ###
-set(CPACK_PACKAGE_VENDOR "Iowa State University")
-set(CPACK_PACKAGE_CONTACT "Ryan Pavlik <rpavlik@iastate.edu>")
-set(CPACK_PACKAGE_VERSION_MAJOR "2")
-set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
-set(CPACK_PACKAGE_VERSION
-	"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
-
-set(MAJOR_VER_NUMBER ${CPACK_PACKAGE_VERSION_MAJOR})
-set(MINOR_VER_NUMBER ${CPACK_PACKAGE_VERSION_MINOR})
-set(PATCH_VER_NUMBER ${CPACK_PACKAGE_VERSION_PATCH})
-
-math(EXPR VER_NUMBER "${MAJOR_VER_NUMBER} * 1000000 + ${MINOR_VER_NUMBER} * 1000 + ${PATCH_VER_NUMBER}")
-set(VER_STRING "\"${CPACK_PACKAGE_VERSION}\"")
-
-# CMake modules
-include("${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/VRJugglerSuiteDefaultOptions.cmake")
+vrjugglersuite_parse_version_file()
 
 ###
 # Dependencies
