@@ -51,11 +51,6 @@ if(CPPUNIT_FOUND)
 		TestCases/Socket/SocketTest.h
 		TestCases/Socket/NonBlockingSocketsTest.h
 		TestCases/SystemTest.cpp
-		TestCases/Simulator/SocketSimulatorTest.h
-		TestCases/Simulator/SimSelectorTest.h
-		TestCases/Simulator/Makefile.in
-		TestCases/Simulator/SocketSimulatorTest.cpp
-		TestCases/Simulator/SimSelectorTest.cpp
 		TestCases/Thread/SignalTest.h
 		TestCases/Thread/ThreadTest.cpp
 		TestCases/Thread/Makefile.in

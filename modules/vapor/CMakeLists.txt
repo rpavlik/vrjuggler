@@ -39,7 +39,6 @@ set(VPR_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_D
 ###
 # Configuration
 ###
-option(VPR_SIMULATOR "Use simulated interface." OFF)
 
 # OS define
 if(WIN32)

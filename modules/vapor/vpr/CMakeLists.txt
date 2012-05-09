@@ -39,21 +39,6 @@ set(HEADERS
 	md/BOOST/IO/Socket/SocketStreamImplBOOST.h
 	md/BOOST/IO/Socket/SocketImplBOOST.h
 	md/BOOST/IO/Socket/SocketDatagramImplBOOST.h
-	md/SIM/Network/NetworkGraph.h
-	md/SIM/Network/MessagePtr.h
-	md/SIM/Network/NetworkNode.h
-	md/SIM/Network/NetworkLine.h
-	md/SIM/Network/Message.h
-	md/SIM/Controller.h
-	md/SIM/Clock.h
-	md/SIM/IO/SelectorImplSIM.h
-	md/SIM/IO/Socket/SocketStreamImplSIM.h
-	md/SIM/IO/Socket/InetAddrSIM.h
-	md/SIM/IO/Socket/SocketDatagramImplSIM.h
-	md/SIM/IO/Socket/SocketImplSIM.h
-	md/SIM/IO/IOSysSIM.h
-	md/SIM/DNS.h
-	md/SIM/SocketManager.h
 	md/POSIX/DynLoad/LibraryUNIX.h
 	md/POSIX/Util/ErrorImplPosix.h
 	md/POSIX/SystemPosix.h
@@ -101,6 +86,7 @@ set(HEADERS
 	Util/BadCastException.h
 	Util/SampleLimitedStatCollector.h
 	Util/GUID.h
+	Util/SignalProxy.h
 	Util/Singleton.h
 	vprTypes.h
 	Sync/Guard.h
@@ -269,23 +255,6 @@ set(SOURCES_BOOST
 )
 source_group(Boost FILES ${SOURCES_BOOST})
 
-set(SOURCES_SIM
-	md/SIM/DNS.cpp
-	md/SIM/Controller.cpp
-	md/SIM/Network/Message.cpp
-	md/SIM/Network/NetworkGraph.cpp
-	md/SIM/Network/NetworkNode.cpp
-	md/SIM/Network/NetworkLine.cpp
-	md/SIM/SocketManager.cpp
-	md/SIM/IO/SelectorImplSIM.cpp
-	md/SIM/IO/IOSysSIM.cpp
-	md/SIM/IO/Socket/SocketDatagramImplSIM.cpp
-	md/SIM/IO/Socket/SocketImplSIM.cpp
-	md/SIM/IO/Socket/InetAddrSIM.cpp
-	md/SIM/IO/Socket/SocketStreamImplSIM.cpp
-)
-source_group(SIM FILES ${SOURCES_SIM})
-
 set(SOURCES_POSIX
 	md/POSIX/DynLoad/LibraryUNIX.cpp
 	md/POSIX/Util/ErrorImplPosix.cpp
@@ -329,10 +298,6 @@ set(SOURCES_LEACHUUID
 	${CMAKE_CURRENT_SOURCE_DIR}/../../../external/leach-uuid/uuid/uuid.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../../external/leach-uuid/uuid/uuid.h)
 source_group(LeachUUID FILES ${SOURCES_LEACHUUID})
-
-if(VPR_SIMULATOR)
-	list(APPEND SOURCES ${SOURCES_SIM})
-endif()
 
 if(WIN32)
 	list(APPEND SOURCES ${SOURCES_WIN32})
