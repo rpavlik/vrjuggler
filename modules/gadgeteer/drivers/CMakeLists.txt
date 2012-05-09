@@ -51,6 +51,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	add_subdirectory(Open/LinuxJoydev)
 endif()
 
+# Must set this flag so it doesn't try to make a main.
+set(SDL_BUILDING_LIBRARY ON)
+find_package(SDL)
+if(SDL_FOUND)
+	add_subdirectory(Open/SdlJoystick)
+endif()
+
 check_include_file_cxx(sys/ipc.h HAVE_SYS_IPC_H)
 check_include_file_cxx(sys/shm.h HAVE_SYS_SHM_H)
 if(HAVE_SYS_IPC_H AND HAVE_SYS_SHM_H)
