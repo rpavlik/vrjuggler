@@ -56,6 +56,7 @@ check_include_file_cxx(sys/shm.h HAVE_SYS_SHM_H)
 if(HAVE_SYS_IPC_H AND HAVE_SYS_SHM_H)
 	add_subdirectory(Open/Trackd)
 endif()
+add_subdirectory(Open/TUIO)
 
 find_package(VRPN)
 if(VRPN_FOUND)
