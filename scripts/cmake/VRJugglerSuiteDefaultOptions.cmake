@@ -76,6 +76,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ${BUILD_WITH_PROJECT_FOLDERS})
 set(VRJUGGLERSUITE_CORELIB_PROJECT_FOLDER "Core VR Juggler libraries")
 set(VRJUGGLERSUITE_META_PROJECT_FOLDER "Convenience targets")
 
+set(CPACK_PACKAGE_VENDOR "Iowa State University")
+set(CPACK_PACKAGE_CONTACT "Ryan Pavlik <rpavlik@iastate.edu>")
+
 if(WIN32)
 	add_definitions(-DCPPDOM_DYN_LINK -DBOOST_ALL_DYN_LINK)
 endif()
@@ -94,4 +97,45 @@ function(vrjugglersuite_set_versioned_library_output_name _target)
 		PROPERTY OUTPUT_NAME ${_target}-${_vertag})
 	set_property(TARGET ${_target}
 		PROPERTY OUTPUT_NAME_DEBUG ${_target}_d-${_vertag})
+endfunction()
+
+function(vrjugglersuite_parse_version_file)
+	set(_version_file "${CMAKE_CURRENT_SOURCE_DIR}/VERSION")
+	if(EXISTS "${_version_file}")
+		file(READ "${_version_file}" _version_contents)
+	endif()
+	set(_version_regex "^([0-9]+).([0-9]+).([0-9]+)-")
+	string(REGEX
+		MATCH
+		"${_version_regex}"
+		_dummy
+		"${_version_contents}")
+
+	if(CMAKE_MATCH_1 AND CMAKE_MATCH_2 AND CMAKE_MATCH_3)
+		set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}" PARENT_SCOPE)
+		set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_2}" PARENT_SCOPE)
+		set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_3}" PARENT_SCOPE)
+		set(MAJOR_VER_NUMBER "${CMAKE_MATCH_1}" PARENT_SCOPE)
+		set(MINOR_VER_NUMBER "${CMAKE_MATCH_2}" PARENT_SCOPE)
+		set(PATCH_VER_NUMBER "${CMAKE_MATCH_3}" PARENT_SCOPE)
+
+		set(CPACK_PACKAGE_VERSION
+			"${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3}" PARENT_SCOPE)
+
+		math(EXPR VER_NUMBER "${CMAKE_MATCH_1} * 1000000 + ${CMAKE_MATCH_2} * 1000 + ${CMAKE_MATCH_3}")
+		set(VER_NUMBER "${VER_NUMBER}" PARENT_SCOPE)
+		set(VER_STRING "\"${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3}\"" PARENT_SCOPE)
+		message(STATUS "")
+		message(STATUS "Configuring ${PROJECT_NAME} ${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3}")
+
+	else()
+		message(FATAL_ERROR "Could not parse VERSION!")
+	endif()
+
+	if(CMAKE_MATCH_2)
+
+	else()
+		set(CPACK_PACKAGE_VERSION_MAJOR "26")
+		warning_dev("Could not parse minor version from vrpn_Connection.C")
+	endif()
 endfunction()
