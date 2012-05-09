@@ -4,8 +4,6 @@ set(HEADERS
 	App.h
 	BasicSimulator.h
 	Config.h
-	D3dApp.h
-	D3dDrawManager.h
 	DrawManager.h
 	SimInterface.h
 	SimInterfaceFactory.h

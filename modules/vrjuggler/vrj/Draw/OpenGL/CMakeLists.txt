@@ -1,13 +1,6 @@
 add_definitions(-D_VRJ_OGL_BUILD_)
 
 set(HEADERS
-	../OGL/GlApp.h
-	../OGL/GlContextData.h
-	../OGL/GlDrawManager.h
-	../OGL/GlProcApp.h
-	../OGL/GlUserData.h
-	../OGL/GlWindow.h
-	../OGL/GlWindowPtr.h
 	App.h
 	BasicSimulator.h
 	Config.h
@@ -29,15 +22,13 @@ set(HEADERS
 	WindowXWin.h)
 
 set(OPENSG_HEADERS
-	../OpenSG/App.h
-	../OpenSG/OpenSGApp.h)
+	../OpenSG/App.h)
 source_group(OpenSG FILES ${OPENSG_HEADERS})
 
 set(OSG_HEADERS
 	../OSG/App.h
 	../OSG/AppPager.h
-	../OSG/AppViewer.h
-	../OSG/OsgApp.h)
+	../OSG/AppViewer.h)
 source_group(OSG FILES ${OSG_HEADERS})
 
 set(SOURCES
