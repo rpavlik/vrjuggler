@@ -21,4 +21,5 @@ endfunction()
 
 add_subdirectory(ApplicationBarrierManager)
 add_subdirectory(ApplicationDataManager)
+add_subdirectory(EventPlugin)
 add_subdirectory(RIMPlugin)
