@@ -16,9 +16,38 @@ set(HEADERS
 	Devices/Sim/SimDigital.h
 	Devices/Sim/SimGloveGesture.h
 	Devices/Sim/SimInput.h
+	Devices/Sim/SimInputDevice.h
 	Devices/Sim/SimPosition.h
 	Devices/Sim/SimRelativePosition.h
 	Devices/Sim/SimSetablePosition.h
+	Event/AbstractEventInterface.h
+	Event/AnalogEventInterface.h
+	Event/ClickEvent.h
+	Event/CommandEventInterface.h
+	Event/DataExaminer.h
+	Event/DigitalClickEventInterface.h
+	Event/DigitalEventInterface.h
+	Event/Event.h
+	Event/EventCollection.h
+	Event/EventGenerator.h
+	Event/EventGeneratorPtr.h
+	Event/EventInterface.h
+	Event/EventPtr.h
+	Event/EventRegistration.h
+	Event/EventTags.h
+	Event/KeyboardMouse/KeyEvent.h
+	Event/KeyboardMouse/KeyEventPtr.h
+	Event/KeyboardMouse/MouseEvent.h
+	Event/KeyboardMouse/MouseEventPtr.h
+	Event/KeyboardMouse/SampleHandler.h
+	Event/KeyboardMouseEventInterface.h
+	Event/MouseClickEventInterface.h
+	Event/MultiEventGenerator.h
+	Event/MultiEventInterface.h
+	Event/PositionEventInterface.h
+	Event/ProxySetter.h
+	Event/SampleHandler.h
+	Event/StringEventInterface.h
 	Filter/Position/FullPositionXformFilter.h
 	Filter/Position/PositionCalibrationFilter.h
 	Filter/Position/PositionFilterFactory.h
@@ -36,6 +65,7 @@ set(HEADERS
 	ProxyDepChecker.h
 	ProxyFactory.h
 	Reactor.h
+	Type/AllBaseTypes.h
 	Type/AnalogData.h
 	Type/Analog.h
 	Type/AnalogInterface.h
@@ -44,14 +74,17 @@ set(HEADERS
 	Type/AnalogPtr.h
 	Type/BaseTypeFactory.h
 	Type/Command.h
+	Type/CommandData.h
 	Type/CommandInterface.h
 	Type/CommandProxy.h
 	Type/CommandProxyPtr.h
 	Type/CommandPtr.h
 	Type/DeviceConstructorBase.h
 	Type/DeviceConstructor.h
+	Type/DeviceData.h
 	Type/DeviceFactory.h
 	Type/DeviceInterface.h
+	Type/DeviceTraits.h
 	Type/DigitalData.h
 	Type/Digital.h
 	Type/DigitalInterface.h
@@ -70,10 +103,15 @@ set(HEADERS
 	Type/GloveProxy.h
 	Type/GloveProxyPtr.h
 	Type/GlovePtr.h
-	Type/InputBaseTypes.h
+	Type/Hat.h
+	Type/HatData.h
+	Type/HatInterface.h
+	Type/HatProxy.h
+	Type/HatProxyPtr.h
+	Type/HatPtr.h
 	Type/InputData.h
 	Type/Input.h
-	Type/InputMixer.h
+	Type/InputDevice.h
 	Type/InputPtr.h
 	Type/KeyboardMouse/EventFactory.h
 	Type/KeyboardMouse/Event.h
@@ -85,6 +123,7 @@ set(HEADERS
 	Type/KeyboardMouse/Keys.h
 	Type/KeyboardMouse/MouseEvent.h
 	Type/KeyboardMouse/MouseEventPtr.h
+	Type/KeyboardMouseData.h
 	Type/KeyboardMouseProxy.h
 	Type/KeyboardMouseProxyPtr.h
 	Type/KeyboardMousePtr.h
@@ -98,6 +137,15 @@ set(HEADERS
 	Type/PositionPtr.h
 	Type/Proxy.h
 	Type/ProxyPtr.h
+	Type/ProxyTraits.h
+	Type/Rumble.h
+	Type/RumbleData.h
+	Type/RumbleEffect.h
+	Type/RumbleEffectPtr.h
+	Type/RumbleInterface.h
+	Type/RumbleProxy.h
+	Type/RumbleProxyPtr.h
+	Type/RumblePtr.h
 	Type/SampleBuffer.h
 	Type/Speech.h
 	Type/StringData.h
@@ -106,6 +154,7 @@ set(HEADERS
 	Type/StringProxy.h
 	Type/StringProxyPtr.h
 	Type/StringPtr.h
+	Type/TypeHelpers.h
 	Util/Debug.h
 	Util/DeviceSerializationTokens.h
 	Util/PathHelpers.h
@@ -147,6 +196,12 @@ set(SOURCES
 	Devices/Sim/SimPosition.cpp
 	Devices/Sim/SimRelativePosition.cpp
 	Devices/Sim/SimSetablePosition.cpp
+	Event/AbstractEventInterface.cpp
+	Event/DigitalEventInterface.cpp
+	Event/Event.cpp
+	Event/EventGenerator.cpp
+	Event/KeyboardMouse/KeyEvent.cpp
+	Event/KeyboardMouse/MouseEvent.cpp
 	Filter/Position/FullPositionXformFilter.cpp
 	Filter/Position/PositionCalibrationFilter.cpp
 	Filter/Position/PositionFilterFactory.cpp
@@ -173,16 +228,19 @@ set(SOURCES
 	Type/GloveData.cpp
 	Type/GloveGesture.cpp
 	Type/GloveProxy.cpp
+	Type/Hat.cpp
+	Type/HatProxy.cpp
 	Type/Input.cpp
+	Type/InputData.cpp
 	Type/KeyboardMouse.cpp
-	Type/KeyboardMouse/Event.cpp
-	Type/KeyboardMouse/KeyEvent.cpp
-	Type/KeyboardMouse/MouseEvent.cpp
 	Type/KeyboardMouseProxy.cpp
 #	Type/LinearSigmoidPositionFilter.cpp # TODO: This file is broken!
 	Type/Position.cpp
 	Type/PositionProxy.cpp
 	Type/Proxy.cpp
+	Type/Rumble.cpp
+	Type/RumbleEffect.cpp
+	Type/RumbleProxy.cpp
 	Type/String.cpp
 	Type/StringProxy.cpp
 	Util/PathHelpers.cpp
