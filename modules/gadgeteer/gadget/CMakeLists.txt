@@ -48,6 +48,8 @@ set(HEADERS
 	Event/ProxySetter.h
 	Event/SampleHandler.h
 	Event/StringEventInterface.h
+	EventEmitter.h
+	EventEmitterPtr.h
 	Filter/Position/FullPositionXformFilter.h
 	Filter/Position/PositionCalibrationFilter.h
 	Filter/Position/PositionFilterFactory.h
@@ -202,6 +204,7 @@ set(SOURCES
 	Event/EventGenerator.cpp
 	Event/KeyboardMouse/KeyEvent.cpp
 	Event/KeyboardMouse/MouseEvent.cpp
+	EventEmitter.cpp
 	Filter/Position/FullPositionXformFilter.cpp
 	Filter/Position/PositionCalibrationFilter.cpp
 	Filter/Position/PositionFilterFactory.cpp
