@@ -56,6 +56,8 @@ set(SDL_BUILDING_LIBRARY ON)
 find_package(SDL)
 if(SDL_FOUND)
 	add_subdirectory(Open/SdlJoystick)
+else()
+	message(STATUS "Gadgeteer: SdlJoystick plugin disabled - dependency not found")
 endif()
 
 check_include_file_cxx(sys/ipc.h HAVE_SYS_IPC_H)
