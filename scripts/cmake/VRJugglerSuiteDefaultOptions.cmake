@@ -104,14 +104,14 @@ function(vrjugglersuite_parse_version_file)
 	if(EXISTS "${_version_file}")
 		file(READ "${_version_file}" _version_contents)
 	endif()
-	set(_version_regex "^([0-9]+).([0-9]+).([0-9]+)-")
+	
+	set(_version_regex "^([0-9]+).([0-9]+).([0-9]+)")
 	string(REGEX
 		MATCH
 		"${_version_regex}"
 		_dummy
 		"${_version_contents}")
-
-	if(CMAKE_MATCH_1 AND CMAKE_MATCH_2 AND CMAKE_MATCH_3)
+	if(_dummy)
 		set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}" PARENT_SCOPE)
 		set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_2}" PARENT_SCOPE)
 		set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_3}" PARENT_SCOPE)
@@ -132,10 +132,4 @@ function(vrjugglersuite_parse_version_file)
 		message(FATAL_ERROR "Could not parse VERSION!")
 	endif()
 
-	if(CMAKE_MATCH_2)
-
-	else()
-		set(CPACK_PACKAGE_VERSION_MAJOR "26")
-		warning_dev("Could not parse minor version from vrpn_Connection.C")
-	endif()
 endfunction()
