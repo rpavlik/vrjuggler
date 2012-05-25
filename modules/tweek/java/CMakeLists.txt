@@ -185,3 +185,32 @@ add_jar(Viewers
 	org/vrjuggler/tweek/iconviewer/home-small.gif
 	org/vrjuggler/tweek/iconviewer/home.gif
 	LICENSE-java-laf.txt)
+
+function(tweek_create_metatarget _name _slnfolder _dest)
+	set(DESTJARS)
+	file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${_dest}/")
+	foreach(jartarget ${ARGN})
+		set_target_properties(${jartarget} PROPERTIES FOLDER "${_slnfolder}")
+		get_property(JAR_${jartarget} TARGET ${jartarget} PROPERTY JAR_FILE)
+		set(JAR "${JAR_${jartarget}}")
+		message(STATUS "${jartarget} is expected to be built in ${JAR}")
+		get_filename_component(JARNAME "${JAR}" NAME)
+		set(DESTJAR "${CMAKE_BINARY_DIR}/${_dest}/${JARNAME}")
+		add_custom_command(OUTPUT "${DESTJAR}"
+			COMMAND
+			"${CMAKE_COMMAND}" -E copy_if_different "${JAR}" "${DESTJAR}"
+			DEPENDS
+			"${jartarget}"
+			COMMENT "Copying ${JARNAME} to ${_dest} in build tree"
+			VERBATIM)
+		list(APPEND DESTJARS "${DESTJAR}")
+	endforeach()
+	add_custom_target(${_name} ALL
+		DEPENDS ${DESTJARS} ${ARGN})
+	add_dependencies(${_name} ${ARGN})
+	set_target_properties(${_name} PROPERTIES FOLDER "Convenience targets")
+	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${DESTJARS})
+endfunction()
+
+tweek_create_metatarget(tweek_java "Tweek Java API" "${TWEEK_SHARE_DIR}/java" TweekBeanDelivery TweekBeans TweekEvents TweekNet TweekServices)
+tweek_create_metatarget(tweek_beans "Tweek Beans" "${TWEEK_SHARE_DIR}/beans" Viewers)
