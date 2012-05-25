@@ -124,6 +124,8 @@ install(DIRECTORY common/jccl config/jccl rtrc/jccl
 	COMPONENT jccl-dev
 	FILES_MATCHING PATTERN *.h)
 
+add_subdirectory(config)
+
 if(BUILD_TESTING)
 #	add_subdirectory(test)
 endif()
