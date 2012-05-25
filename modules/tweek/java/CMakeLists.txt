@@ -8,7 +8,7 @@ else()
 	set(TWEEK_MAC_SRC)
 endif()
 
-set(EXTERNALS "${CMAKE_CURRENT_SOURCE_DIR}/../../../external")
+get_filename_component(EXTERNALS "${CMAKE_CURRENT_SOURCE_DIR}/../../../external" ABSOLUTE)
 find_jar(JDOM_JAR
 	jdom
 	PATHS
