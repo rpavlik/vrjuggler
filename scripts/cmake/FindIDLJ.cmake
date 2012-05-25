@@ -58,8 +58,6 @@ find_package_handle_standard_args(IDLJ
 if(IDLJ_FOUND)
 	function(java_idlj _varname _idlfile)
 		get_filename_component(_idl_name "${_idlfile}" NAME_WE)
-		
-		message(STATUS "Adding IDLJ processing command for ${_idl_name} aka ${_idlfile}")
 		set(outdir "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/idlj/${_idl_name}.dir")
 		set(stampfile "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/idlj/${_idl_name}.stamp")
 		list(APPEND ${_varname} 
