@@ -230,5 +230,18 @@ function(tweek_create_metatarget _name _slnfolder _dest)
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${DESTJARS})
 endfunction()
 
-tweek_create_metatarget(tweek_java "Tweek Java API" "${TWEEK_SHARE_DIR}/java" TweekBeanDelivery TweekBeans TweekEvents TweekNet TweekServices)
-tweek_create_metatarget(tweek_beans "Tweek Beans" "${TWEEK_SHARE_DIR}/beans" Viewers)
+tweek_create_metatarget(tweek_java
+	"Tweek Java API"
+	"${TWEEK_SHARE_DIR}/java"
+	kunststoff-mod
+	Tweek
+	TweekBeanDelivery
+	TweekBeans
+	TweekEvents
+	TweekNet
+	TweekServices)
+
+tweek_create_metatarget(tweek_beans
+	"Tweek Beans"
+	"${TWEEK_SHARE_DIR}/beans"
+	Viewers)
