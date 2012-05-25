@@ -2,8 +2,6 @@ foreach(idlname ${TWEEK_IDL_NAMES})
 	java_idlj(TWEEK_IDL_JAVA "${TWEEK_IDL_DIR}/${idlname}.idl" -i "${CMAKE_CURRENT_SOURCE_DIR}/..")
 endforeach()
 
-#file(GLOB_RECURSE TWEEK_IDL_JAVA ${CMAKE_CURRENT_BINARY_DIR}/tweek/*.java)
-
 if(APPLE)
 	set(TWEEK_MAC_SRC org/vrjuggler/tweek/mac/TweekAppListener.java)
 else()
@@ -59,7 +57,6 @@ find_jar(JGOODIESLOOKS_JAR
 
 set(CMAKE_JAVA_INCLUDE_PATH ${JDOM_JARS} "${LIQUIDLNF_JAR}" "${METOUIA_JAR}" "${JGOODIESLOOKS_JAR}")
 
-#set(CMAKE_JAVA_TARGET_OUTPUT_DIR "${CMAKE_BINARY_DIR}/${TWEEK_SHARE_DIR}/java")
 # add_jar(Tweek
 	# org/vrjuggler/tweek/EnvironmentServiceImpl.java
 	# org/vrjuggler/tweek/GlobalPreferencesServiceImpl.java
@@ -147,17 +144,15 @@ add_jar(TweekNet
 	org/vrjuggler/tweek/net/corba/CorbaService.java
 	${TWEEK_IDL_JAVA})
 
-get_property(TWEEKNET_JAR TARGET TweekNet PROPERTY JAR_FILE)
-
-get_property(TWEEKBEANS_JAR TARGET TweekBeans PROPERTY JAR_FILE)
-list(APPEND CMAKE_JAVA_INCLUDE_PATH "${TWEEKNET_JAR}" "${TWEEKBEANS_JAR}")
 add_jar(TweekBeanDelivery
+	TweekNet
+	TweekBeans
 	org/vrjuggler/tweek/beandelivery/BeanDeliveryObserverImpl.java
 	org/vrjuggler/tweek/beandelivery/BeanDeliverySubjectUpdateEvent.java
 	org/vrjuggler/tweek/beandelivery/BeanDeliverySubjectUpdateListener.java
 	org/vrjuggler/tweek/beandelivery/TweekBeanIntrospector.java)
 add_dependencies(TweekBeanDelivery TweekNet TweekBeans)
-	
+
 add_jar(TweekServices
 	org/vrjuggler/tweek/services/EnvironmentService.java
 	org/vrjuggler/tweek/services/EnvironmentServiceProxy.java
@@ -165,7 +160,6 @@ add_jar(TweekServices
 	org/vrjuggler/tweek/services/GlobalPreferencesService.java
 	org/vrjuggler/tweek/services/GlobalPreferencesServiceProxy.java)
 
-#set(CMAKE_JAVA_TARGET_OUTPUT_DIR "${CMAKE_BINARY_DIR}/${TWEEK_SHARE_DIR}/beans")
 add_jar(Viewers
 	org/vrjuggler/tweek/treeviewer/BeanSelectionListener.java
 	org/vrjuggler/tweek/treeviewer/BeanTree.java
@@ -186,14 +180,23 @@ add_jar(Viewers
 	org/vrjuggler/tweek/iconviewer/home.gif
 	LICENSE-java-laf.txt)
 
+# Arguments:
+# - metatarget name to create (will also be the install component name)
+# - solution folder for the individual targets
+# - destination for jars relative to ${CMAKE_BINARY_DIR} and the install dir
+# - One or more targets created with add_jar()
 function(tweek_create_metatarget _name _slnfolder _dest)
 	set(DESTJARS)
 	file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${_dest}/")
+
+	# For each jar target
 	foreach(jartarget ${ARGN})
+		# Add a solution folder property
 		set_target_properties(${jartarget} PROPERTIES FOLDER "${_slnfolder}")
+
+		# Set up custom command to copy finished jar to a more suitable place
 		get_property(JAR_${jartarget} TARGET ${jartarget} PROPERTY JAR_FILE)
 		set(JAR "${JAR_${jartarget}}")
-		message(STATUS "${jartarget} is expected to be built in ${JAR}")
 		get_filename_component(JARNAME "${JAR}" NAME)
 		set(DESTJAR "${CMAKE_BINARY_DIR}/${_dest}/${JARNAME}")
 		add_custom_command(OUTPUT "${DESTJAR}"
@@ -205,10 +208,18 @@ function(tweek_create_metatarget _name _slnfolder _dest)
 			VERBATIM)
 		list(APPEND DESTJARS "${DESTJAR}")
 	endforeach()
+
+	# Install from our "suitable place" to its equivalent in the install tree
+	install(FILES ${DESTJARS}
+		DESTINATION "${_dest}" COMPONENT "${_name}")
+
+	# Add the custom meta-target to trigger the jar copying
 	add_custom_target(${_name} ALL
 		DEPENDS ${DESTJARS} ${ARGN})
 	add_dependencies(${_name} ${ARGN})
 	set_target_properties(${_name} PROPERTIES FOLDER "Convenience targets")
+
+	# Clean up our copied jars, too
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${DESTJARS})
 endfunction()
 
