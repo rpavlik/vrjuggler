@@ -1,25 +1,5 @@
-function(java_idlj _varname _module _interface _idlfile)
-	get_filename_component(_idl_name "${_idlfile}" NAME_WE)
-	set(outdir "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/idlj/${_idl_name}.dir")
-	list(APPEND ${_varname} 
-		"${outdir}/${_module}/${_interface}.java"
-		"${outdir}/${_module}/*")
-	set(${_varname} ${${_varname}} PARENT_SCOPE)
-	add_custom_command(OUTPUT
-		"${outdir}/${_module}/${_interface}.java"
-		COMMAND
-		"${Java_IDLJ_COMMAND}" -verbose -fclient -fallTIE -td "${outdir}" ${ARGN} "${_idlfile}"
-		DEPENDS
-		"${_idlfile}"
-		WORKING_DIRECTORY
-		"${CMAKE_CURRENT_SOURCE_DIR}"
-		COMMENT
-		"Processing ${_idlfile} with Java's idlj")
-	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${outdir}")
-endfunction()
-
 foreach(idlname ${TWEEK_IDL_NAMES})
-	java_idlj(TWEEK_IDL_JAVA tweek ${idlname} "${TWEEK_IDL_DIR}/${idlname}.idl" -i "${CMAKE_CURRENT_SOURCE_DIR}/..")
+	java_idlj(TWEEK_IDL_JAVA "${TWEEK_IDL_DIR}/${idlname}.idl" -i "${CMAKE_CURRENT_SOURCE_DIR}/..")
 endforeach()
 
 #file(GLOB_RECURSE TWEEK_IDL_JAVA ${CMAKE_CURRENT_BINARY_DIR}/tweek/*.java)
