@@ -245,3 +245,57 @@ tweek_create_metatarget(tweek_beans
 	"Tweek Beans"
 	"${TWEEK_SHARE_DIR}/beans"
 	Viewers)
+
+# Copy files over to the right spot in build tree
+function(tweek_copy_and_install _varname _dest _component)
+	foreach(_src ${ARGN})
+		get_filename_component(_srcname "${_src}" NAME)
+		install(FILES "${_src}"
+			DESTINATION "${_dest}" COMPONENT "${_component}")
+		set(DESTFILE "${CMAKE_BINARY_DIR}/${_dest}/${_srcname}")
+		list(APPEND ${_varname} "${DESTFILE}")
+
+		add_custom_command(OUTPUT "${DESTFILE}"
+			COMMAND
+			"${CMAKE_COMMAND}" -E copy_if_different "${_src}" "${DESTFILE}"
+			DEPENDS
+			"${_src}"
+			COMMENT "Copying ${_srcname} to ${_dest} in build tree"
+			VERBATIM)
+	endforeach()
+	set(${_varname} ${${_varname}} PARENT_SCOPE)
+endfunction()
+
+# XML file for beans directory
+tweek_copy_and_install(TWEEK_BEANS_COPIED_FILES
+	"${TWEEK_SHARE_DIR}/beans"
+	tweek_beans
+	"${CMAKE_CURRENT_SOURCE_DIR}/Viewers.xml")
+
+add_custom_target(tweek_copy_xml
+	DEPENDS ${TWEEK_BEANS_COPIED_FILES})
+set_target_properties(tweek_copy_xml PROPERTIES FOLDER "Tweek Beans")
+add_dependencies(tweek_beans tweek_copy_xml)
+
+# Look at our classpath and copy any dependencies that we're using our local copy of.
+foreach(jar ${CMAKE_JAVA_INCLUDE_PATH})
+	string(FIND "${jar}" "${EXTERNALS}" FINDRESULT)
+	if(FINDRESULT EQUAL 0)
+		# OK, this is a file from our "externals" folder - must install it.
+		list(APPEND BUNDLED_JAR_DEPENDENCIES "${jar}")
+	else()
+		message(FATAL_ERROR "Used system JAR: ${jar} - TODO")
+	endif()
+endforeach()
+
+tweek_copy_and_install(TWEEK_COPIED_FILES
+	"${TWEEK_SHARE_DIR}/java"
+	tweek_java
+	${BUNDLED_JAR_DEPENDENCIES})
+
+
+add_custom_target(tweek_copy_jar_deps
+	DEPENDS ${TWEEK_COPIED_FILES})
+set_target_properties(tweek_copy_jar_deps PROPERTIES FOLDER "Tweek Java API")
+add_dependencies(tweek_java tweek_copy_jar_deps)
+
