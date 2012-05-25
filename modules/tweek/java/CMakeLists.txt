@@ -88,7 +88,8 @@ set(CMAKE_JAVA_INCLUDE_PATH ${JDOM_JARS} "${LIQUIDLNF_JAR}" "${METOUIA_JAR}" "${
 	# ${TWEEK_MAC_SRC}
 	# LICENSE-java-laf.txt)
 
-add_jar(TweekBeans org/vrjuggler/tweek/beans/BeanAttributes.java
+add_jar(TweekBeans
+	org/vrjuggler/tweek/beans/BeanAttributes.java
 	org/vrjuggler/tweek/beans/BeanDependency.java
 	org/vrjuggler/tweek/beans/BeanDependencyManager.java
 	org/vrjuggler/tweek/beans/BeanFocusChangeEvent.java
