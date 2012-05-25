@@ -293,9 +293,22 @@ tweek_copy_and_install(TWEEK_COPIED_FILES
 	tweek_java
 	${BUNDLED_JAR_DEPENDENCIES})
 
-
 add_custom_target(tweek_copy_jar_deps
 	DEPENDS ${TWEEK_COPIED_FILES})
 set_target_properties(tweek_copy_jar_deps PROPERTIES FOLDER "Tweek Java API")
 add_dependencies(tweek_java tweek_copy_jar_deps)
 
+
+set(BUILDTREE_CLASSPATH ${TWEEK_COPIED_FILES})
+foreach(target
+	kunststoff-mod
+	Tweek
+	TweekBeanDelivery
+	TweekBeans
+	TweekEvents
+	TweekNet
+	TweekServices)
+	list(APPEND BUILDTREE_CLASSPATH "${CMAKE_BINARY_DIR}/${TWEEK_SHARE_DIR}/java/${target}.jar")
+endforeach()
+
+set(TWEEK_JAVA_CLASSPATH ${BUILDTREE_CLASSPATH} CACHE INTERNAL "" FORCE)
