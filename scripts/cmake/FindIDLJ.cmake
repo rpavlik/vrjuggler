@@ -57,12 +57,16 @@ find_package_handle_standard_args(IDLJ
 
 if(IDLJ_FOUND)
 	function(java_idlj _varname _idlfile)
+		# Get some unique value we can use in a directory name
+		# TODO would be better to somehow munge the full path relative to CMAKE_CURRENT_SOURCE_DIR
+		# in case somebody has multiple idl files with the same name
 		get_filename_component(_idl_name "${_idlfile}" NAME_WE)
+
+		# Compute directory name and stamp filename
 		set(outdir "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/idlj/${_idl_name}.dir")
 		set(stampfile "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/idlj/${_idl_name}.stamp")
-		list(APPEND ${_varname} 
-			"${stampfile}"
-			"${outdir}/*")
+
+		# Actually call idlj
 		add_custom_command(OUTPUT
 			"${stampfile}"
 			COMMAND
@@ -75,8 +79,16 @@ if(IDLJ_FOUND)
 			"${CMAKE_CURRENT_SOURCE_DIR}"
 			COMMENT
 			"Processing ${_idlfile} with Java's idlj")
-		
+
+		# Make our additions to the user-specified variable:
+		# the stamp file (for dependency creation) and
+		# the wildcard (for javac to actually compile)
+		list(APPEND ${_varname}
+			"${stampfile}"
+			"${outdir}/*")
 		set(${_varname} ${${_varname}} PARENT_SCOPE)
+
+		# Clean up after ourselves on make clean
 		set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${outdir}" "${stampfile}")
 	endfunction()
 endif()
