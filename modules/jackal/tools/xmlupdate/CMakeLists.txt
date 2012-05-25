@@ -13,11 +13,11 @@ set(SOURCES
 
 install(FILES ${SOURCES}
 	COMPONENT jccl-runtime
-	DESTINATION share/${JCCL_SHARE_DIR}/tools/xmlupdate)
+	DESTINATION ${JCCL_SHARE_DIR}/tools/xmlupdate)
 
-file(MAKE_DIRECTORY "${SHARE_OUTPUT_DIRECTORY}/${JCCL_SHARE_DIR}/tools/xmlupdate")
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${JCCL_SHARE_DIR}/tools/xmlupdate")
 
 foreach(fn ${SOURCES})
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${fn}"
-		"${SHARE_OUTPUT_DIRECTORY}/${JCCL_SHARE_DIR}/tools/xmlupdate/${fn}" COPYONLY)
+		"${CMAKE_BINARY_DIR}/${JCCL_SHARE_DIR}/tools/xmlupdate/${fn}" COPYONLY)
 endforeach()
