@@ -126,7 +126,7 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
             {
                mUdpSocket->cancel();
             }
-            catch (std::exception & ex)
+            catch (std::exception &)
             {
                vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
                   << "[SocketDatagramImplBOOST] caught an exception "
