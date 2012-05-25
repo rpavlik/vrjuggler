@@ -68,6 +68,20 @@ if(BUILD_JAVA)
 		org/vrjuggler/jccl/config/undo/package.html)
 	add_dependencies(jccl_config tweek_java)
 	set_target_properties(jccl_config PROPERTIES FOLDER "JCCL Java")
+	get_property(JAR TARGET jccl_config PROPERTY JAR_FILE)
+	list(APPEND CMAKE_JAVA_INCLUDE_PATH ${JAR})
+
+	get_filename_component(CORBARTRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../plugins/corba_rtrc" ABSOLUTE)
+	
+	java_idlj(JCCL_CORBARTRC_JAVA "${CORBARTRC_DIR}/idl/RemoteReconfigSubject.idl" -i "${CORBARTRC_DIR}" -i "${CMAKE_CURRENT_SOURCE_DIR}/../../tweek")
+	add_jar(jccl_rtrc
+		${JCCL_CORBARTRC_JAVA}
+		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSource.java
+		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSourceBroker.java
+		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSourceBrokerImpl.java
+		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSourceBrokerProxy.java)
+	set_target_properties(jccl_rtrc PROPERTIES FOLDER "JCCL Java")
+	add_dependencies(jccl_rtrc jccl_config)
 
 	# Set up custom command to copy finished jar to a more suitable place
 	set(BEANDIR "${JCCL_SHARE_DIR}/beans")
