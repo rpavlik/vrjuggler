@@ -64,12 +64,7 @@ if(OMNIORB4_FOUND)
 endif()
 
 if(BUILD_JAVA)
-	get_filename_component(JAVA_BIN_DIR "${Java_JAVAC_EXECUTABLE}" PATH)
-	find_program(Java_IDLJ_COMMAND
-		idlj
-		PATHS
-		${JAVA_BIN_DIR}
-	)
+	find_package(IDLJ)
 	add_subdirectory(java)
 	if(TWEEK_BUILD_EXTENSIONS)
 #		add_subdirectory(extensions/java)
