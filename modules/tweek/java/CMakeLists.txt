@@ -57,36 +57,42 @@ find_jar(JGOODIESLOOKS_JAR
 
 set(CMAKE_JAVA_INCLUDE_PATH ${JDOM_JARS} "${LIQUIDLNF_JAR}" "${METOUIA_JAR}" "${JGOODIESLOOKS_JAR}")
 
-# add_jar(Tweek
-	# org/vrjuggler/tweek/EnvironmentServiceImpl.java
-	# org/vrjuggler/tweek/GlobalPreferencesServiceImpl.java
-	# org/vrjuggler/tweek/Tweek.java
-	# org/vrjuggler/tweek/TweekCore.java
-	# org/vrjuggler/tweek/gui/AboutBox.java
-	# org/vrjuggler/tweek/gui/BeanContainer.java
-	# org/vrjuggler/tweek/gui/BeanPrefsDialog.java
-	# org/vrjuggler/tweek/gui/BeanStatusDialog.java
-	# org/vrjuggler/tweek/gui/DirectConnectionDialog.java
-	# org/vrjuggler/tweek/gui/DisconnectionDialog.java
-	# org/vrjuggler/tweek/gui/GlobalPrefsUpdateEvent.java
-	# org/vrjuggler/tweek/gui/GlobalPrefsUpdateListener.java
-	# org/vrjuggler/tweek/gui/MessagePanel.java
-	# org/vrjuggler/tweek/gui/NamingServiceConnectionDialog.java
-	# org/vrjuggler/tweek/gui/PrefsDialog.java
-	# org/vrjuggler/tweek/gui/SubjectManagerWrapper.java
-	# org/vrjuggler/tweek/gui/TweekFrame.java
-	# org/vrjuggler/tweek/gui/bulb-off-small.gif
-	# org/vrjuggler/tweek/gui/bulb-on-small.gif
-	# org/vrjuggler/tweek/gui/tweek-icon.gif
-	# org/vrjuggler/tweek/gui/tweek.gif
-	# org/vrjuggler/tweek/text/MessageAdditionEvent.java
-	# org/vrjuggler/tweek/text/MessageAdditionListener.java
-	# org/vrjuggler/tweek/text/MessageDocument.java
-	# org/vrjuggler/tweek/text/error.gif
-	# org/vrjuggler/tweek/text/status.gif
-	# org/vrjuggler/tweek/text/warning.gif
-	# ${TWEEK_MAC_SRC}
-	# LICENSE-java-laf.txt)
+add_subdirectory("../../../external/swing-laf/kunststoff/sources" kunststoff-mod-build)
+
+get_property(klafjar TARGET kunststoff-mod PROPERTY JAR_FILE)
+list(APPEND CMAKE_JAVA_INCLUDE_PATH "${klafjar}")
+add_jar(Tweek
+	org/vrjuggler/tweek/EnvironmentServiceImpl.java
+	org/vrjuggler/tweek/GlobalPreferencesServiceImpl.java
+	org/vrjuggler/tweek/Tweek.java
+	org/vrjuggler/tweek/TweekCore.java
+	org/vrjuggler/tweek/gui/AboutBox.java
+	org/vrjuggler/tweek/gui/BeanContainer.java
+	org/vrjuggler/tweek/gui/BeanPrefsDialog.java
+	org/vrjuggler/tweek/gui/BeanStatusDialog.java
+	org/vrjuggler/tweek/gui/DirectConnectionDialog.java
+	org/vrjuggler/tweek/gui/DisconnectionDialog.java
+	org/vrjuggler/tweek/gui/GlobalPrefsUpdateEvent.java
+	org/vrjuggler/tweek/gui/GlobalPrefsUpdateListener.java
+	org/vrjuggler/tweek/gui/MessagePanel.java
+	org/vrjuggler/tweek/gui/NamingServiceConnectionDialog.java
+	org/vrjuggler/tweek/gui/PrefsDialog.java
+	org/vrjuggler/tweek/gui/SubjectManagerWrapper.java
+	org/vrjuggler/tweek/gui/TweekFrame.java
+	org/vrjuggler/tweek/gui/bulb-off-small.gif
+	org/vrjuggler/tweek/gui/bulb-on-small.gif
+	org/vrjuggler/tweek/gui/tweek-icon.gif
+	org/vrjuggler/tweek/gui/tweek.gif
+	org/vrjuggler/tweek/text/MessageAdditionEvent.java
+	org/vrjuggler/tweek/text/MessageAdditionListener.java
+	org/vrjuggler/tweek/text/MessageDocument.java
+	org/vrjuggler/tweek/text/error.gif
+	org/vrjuggler/tweek/text/status.gif
+	org/vrjuggler/tweek/text/warning.gif
+	${TWEEK_MAC_SRC}
+	LICENSE-java-laf.txt)
+add_dependencies(Tweek kunststoff-mod)
+list(REMOVE_ITEM CMAKE_JAVA_INCLUDE_PATH "${klafjar}")
 
 add_jar(TweekBeans
 	org/vrjuggler/tweek/beans/BeanAttributes.java
