@@ -16,7 +16,7 @@ vrjugglersuite_parse_version_file()
 ###
 
 if(BUILD_JAVA)
-	option(TWEEK_BUILD_EXTENSIONS "Build Tweek java extensions" OFF)
+	option(TWEEK_BUILD_EXTENSIONS "Build Tweek java extensions" ON)
 endif()
 
 find_package(GMTL REQUIRED)
@@ -66,7 +66,7 @@ if(BUILD_JAVA)
 	find_package(IDLJ)
 	add_subdirectory(java)
 	if(TWEEK_BUILD_EXTENSIONS)
-#		add_subdirectory(extensions/java)
+		add_subdirectory(extensions/java)
 	endif()
 endif()
 
