@@ -1,6 +1,7 @@
 if(BUILD_JAVA)
 	set(CMAKE_JAVA_INCLUDE_PATH ${TWEEK_JAVA_CLASSPATH})
-
+	###
+	# jccl_config
 	add_jar(jccl_config
 		org/vrjuggler/jccl/config/Category.java
 		org/vrjuggler/jccl/config/ConfigBroker.java
@@ -71,50 +72,117 @@ if(BUILD_JAVA)
 	get_property(JAR TARGET jccl_config PROPERTY JAR_FILE)
 	list(APPEND CMAKE_JAVA_INCLUDE_PATH ${JAR})
 
+	###
+	# jccl_rtrc
 	get_filename_component(CORBARTRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../plugins/corba_rtrc" ABSOLUTE)
-	
+
 	java_idlj(JCCL_CORBARTRC_JAVA "${CORBARTRC_DIR}/idl/RemoteReconfigSubject.idl" -i "${CORBARTRC_DIR}" -i "${CMAKE_CURRENT_SOURCE_DIR}/../../tweek")
 	add_jar(jccl_rtrc
-		${JCCL_CORBARTRC_JAVA}
 		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSource.java
 		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSourceBroker.java
 		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSourceBrokerImpl.java
-		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSourceBrokerProxy.java)
+		${CORBARTRC_DIR}/org/vrjuggler/jccl/rtrc/RTRCDataSourceBrokerProxy.java
+		${JCCL_CORBARTRC_JAVA})
 	set_target_properties(jccl_rtrc PROPERTIES FOLDER "JCCL Java")
 	add_dependencies(jccl_rtrc jccl_config)
 
-	# Set up custom command to copy finished jar to a more suitable place
-	set(BEANDIR "${JCCL_SHARE_DIR}/beans")
-	get_property(JAR TARGET jccl_config PROPERTY JAR_FILE)
-	get_filename_component(JARNAME "${JAR}" NAME)
-	set(DESTJAR "${CMAKE_BINARY_DIR}/${BEANDIR}/${JARNAME}")
-	add_custom_command(OUTPUT "${DESTJAR}"
-		COMMAND
-		"${CMAKE_COMMAND}" -E copy_if_different "${JAR}" "${DESTJAR}"
-		DEPENDS
-		jccl_config
-		COMMENT "Copying ${JARNAME} to ${BEANDIR} in build tree"
-		VERBATIM)
-	list(APPEND JCCL_COPIED_FILES "${DESTJAR}")
-	set(JCCL_JAVA_CLASSPATH ${TWEEK_JAVA_CLASSPATH} "${DESTJAR}" CACHE INTERNAL "" FORCE)
-	
-	set(DESTFILE "${CMAKE_BINARY_DIR}/${BEANDIR}/jccl_config.xml")
-	add_custom_command(OUTPUT "${DESTFILE}"
-		COMMAND
-		"${CMAKE_COMMAND}" -E copy_if_different
-		"${CMAKE_CURRENT_SOURCE_DIR}/jccl_config.xml" "${DESTFILE}"
-		DEPENDS
-		"${CMAKE_CURRENT_SOURCE_DIR}/jccl_config.xml"
-		COMMENT "Copying jccl_config.xml to ${BEANDIR} in build tree"
-		VERBATIM)
-	list(APPEND JCCL_COPIED_FILES "${DESTFILE}")
+	###
+	# jccl_editors
+	list(APPEND CMAKE_JAVA_INCLUDE_PATH "${TABLELAYOUT_JAR}" ${TWEEK_EXT_BUILDTREE_JARS})
 
-	# Install from our "suitable place" to its equivalent in the install tree
-	install(FILES ${JCCL_COPIED_FILES}
-		DESTINATION "${BEANDIR}" COMPONENT "jccl_java")
+	string(FIND "${TABLELAYOUT_JAR}" "${EXTERNALS}" FINDRESULT)
+	if(FINDRESULT EQUAL 0)
+		# OK, this is a file from our "externals" folder - must install it.
+		vrjugglersuite_copy_and_install(JCCL_COPIED_FILES
+			"${JCCL_SHARE_DIR}/java"
+			jccl_java
+			"${TABLELAYOUT_JAR}")
+	else()
+		message(FATAL_ERROR "Used system JAR: ${jar} - TODO")
+	endif()
+	#get_filename_component(EDITORS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../editors" ABSOLUTE)
+	set(EDITORS_DIR "../editors")
+	add_jar(jccl_editors
+		jccl_config
+		ui
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/BooleanEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigContextEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigContextModel.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigDefinitionChooser.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigDefinitionEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigDefinitionPropertySheet.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigDefinitionRepositoryEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigDefinitionRepositoryModel.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigDefinitionTableModel.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigElementCellEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigElementPointerEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigElementPropertySheet.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ConfigElementTreeTableModel.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/CustomEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/CustomEditorRegistry.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/DataFlavorRepository.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ElementTree.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/EmbeddedElementPanel.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/EnumeratedPropertyValueEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/event/ConfigElementSelectionEvent.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/event/ConfigElementSelectionListener.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/event/package.html
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ExpandablePanel.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/FloatEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/GenericConfigEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Back16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/category.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/collapse_property.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/configchunk.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/config_element.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Copy16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Cut16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Delete16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Down16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/expand_property.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Forward16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/New16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/newcategory.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Paste16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/property.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/removecategory.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/images/Up16.gif
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/IntegerEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/net/TinyBrowser.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/package.html
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/PropertyComponent.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/PropertyDefinitionEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/PropertyDefinitionEditorRegistry.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/PropertyEditorPanel.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/PropertySheet.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/PropertySheetFactory.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/StringEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/TransferableConfigElement.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/ValuetypeEditor.java
+		${EDITORS_DIR}/org/vrjuggler/jccl/editors/VarListPanel.java)
+
+	add_dependencies(jccl_editors jccl_config ui tweek_java_extensions)
+	set_target_properties(jccl_editors PROPERTIES FOLDER "JCCL Java")
+
+	# Set up custom command to copy finished jar to a more suitable place
+	foreach(JARTARGET jccl_config jccl_rtrc jccl_editors)
+		get_property(JAR TARGET ${JARTARGET} PROPERTY JAR_FILE)
+		vrjugglersuite_copy_and_install(JCCL_COPIED_FILES
+			"${JCCL_SHARE_DIR}/beans"
+			jccl_java
+			"${JAR}")
+	endforeach()
+
+	set(JCCL_JAVA_CLASSPATH ${TWEEK_JAVA_CLASSPATH} ${JCCL_COPIED_FILES} CACHE INTERNAL "" FORCE)
+
+	vrjugglersuite_copy_and_install(JCCL_COPIED_XML
+		"${JCCL_SHARE_DIR}/beans"
+		jccl_java
+		"${CMAKE_CURRENT_SOURCE_DIR}/jccl_config.xml"
+		"${CORBARTRC_DIR}/jccl_rtrc.xml")
 
 	# Add the custom meta-target to trigger the jar copying
 	add_custom_target(jccl_java ALL
-		DEPENDS ${JCCL_COPIED_FILES} jccl_config)
+		DEPENDS ${JCCL_COPIED_FILES} jccl_config jccl_rtrc jccl_editors)
 	set_target_properties(jccl_java PROPERTIES FOLDER "Convenience targets")
 endif()
