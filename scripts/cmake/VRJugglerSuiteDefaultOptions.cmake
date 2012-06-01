@@ -133,3 +133,28 @@ function(vrjugglersuite_parse_version_file)
 	endif()
 
 endfunction()
+
+
+# Copy files over to the right spot in build tree
+# _varname: variable name to append the destination file's name to (for a custom target dependency)
+# _dest: Destination directory: will be relative to CMAKE_BINARY_DIR and the install prefix
+# _component: The install component that this will be installed with
+# All other arguments are files, to be copied into the same destination (flattened)
+function(vrjugglersuite_copy_and_install _varname _dest _component)
+	foreach(_src ${ARGN})
+		get_filename_component(_srcname "${_src}" NAME)
+		install(FILES "${_src}"
+			DESTINATION "${_dest}" COMPONENT "${_component}")
+		set(DESTFILE "${CMAKE_BINARY_DIR}/${_dest}/${_srcname}")
+		list(APPEND ${_varname} "${DESTFILE}")
+
+		add_custom_command(OUTPUT "${DESTFILE}"
+			COMMAND
+			"${CMAKE_COMMAND}" -E copy_if_different "${_src}" "${DESTFILE}"
+			DEPENDS
+			"${_src}"
+			COMMENT "Copying ${_srcname} to ${_dest} in build tree"
+			VERBATIM)
+	endforeach()
+	set(${_varname} ${${_varname}} PARENT_SCOPE)
+endfunction()

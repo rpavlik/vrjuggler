@@ -246,28 +246,8 @@ tweek_create_metatarget(tweek_beans
 	"${TWEEK_SHARE_DIR}/beans"
 	Viewers)
 
-# Copy files over to the right spot in build tree
-function(tweek_copy_and_install _varname _dest _component)
-	foreach(_src ${ARGN})
-		get_filename_component(_srcname "${_src}" NAME)
-		install(FILES "${_src}"
-			DESTINATION "${_dest}" COMPONENT "${_component}")
-		set(DESTFILE "${CMAKE_BINARY_DIR}/${_dest}/${_srcname}")
-		list(APPEND ${_varname} "${DESTFILE}")
-
-		add_custom_command(OUTPUT "${DESTFILE}"
-			COMMAND
-			"${CMAKE_COMMAND}" -E copy_if_different "${_src}" "${DESTFILE}"
-			DEPENDS
-			"${_src}"
-			COMMENT "Copying ${_srcname} to ${_dest} in build tree"
-			VERBATIM)
-	endforeach()
-	set(${_varname} ${${_varname}} PARENT_SCOPE)
-endfunction()
-
 # XML file for beans directory
-tweek_copy_and_install(TWEEK_BEANS_COPIED_FILES
+vrjugglersuite_copy_and_install(TWEEK_BEANS_COPIED_FILES
 	"${TWEEK_SHARE_DIR}/beans"
 	tweek_beans
 	"${CMAKE_CURRENT_SOURCE_DIR}/Viewers.xml")
@@ -288,7 +268,7 @@ foreach(jar ${CMAKE_JAVA_INCLUDE_PATH})
 	endif()
 endforeach()
 
-tweek_copy_and_install(TWEEK_COPIED_FILES
+vrjugglersuite_copy_and_install(TWEEK_COPIED_FILES
 	"${TWEEK_SHARE_DIR}/java"
 	tweek_java
 	${BUNDLED_JAR_DEPENDENCIES})
