@@ -8,15 +8,17 @@
 #  IDLJ_FOUND, If false, do not try to use this
 #
 # Function:
-#  java_idlj(varname idlfile [extra idlj args]) - Adds a custom command to generate
+#  java_idlj(varname idlfile [extra idlj args]) - Generates
 #    the Java source files from the IDL file you indicate, and
 #    appends filenames suitable to add to a add_jar() call to the
 #    variable you specified.
 #
 # Because the files generated from an IDL file are not entirely predictable,
-# java_idlj will add a stamp file (for dependency handling) and an ant-style
-# wildcard to your list of filenames; this approach works fine with CMake 2.8.5+
-# Java support. Files are generated in a directory created specifically for
+# java_idlj runs idlj in the cmake step, rather than the build step, and triggers
+# a CMake re-run when an idl file is modified. Already up-to-date generated source
+# is not re-generated, however.
+#
+# Files are generated in a directory created specifically for
 # the particular IDL file and the particular call, in the build directory -
 # there should be no worries about overwriting files or picking up too much
 # with the wildcard.
@@ -61,32 +63,26 @@ if(IDLJ_FOUND)
 		# TODO would be better to somehow munge the full path relative to CMAKE_CURRENT_SOURCE_DIR
 		# in case somebody has multiple idl files with the same name
 		get_filename_component(_idl_name "${_idlfile}" NAME_WE)
+		get_filename_component(_idl_abs "${_idlfile}" ABSOLUTE)
 
 		# Compute directory name and stamp filename
 		set(outdir "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/idlj/${_idl_name}.dir")
 		set(stampfile "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/idlj/${_idl_name}.stamp")
 
-		# Actually call idlj
-		add_custom_command(OUTPUT
-			"${stampfile}"
-			COMMAND
-			"${Java_IDLJ_COMMAND}" -verbose -fclient -fallTIE -td "${outdir}" ${ARGN} "${_idlfile}"
-			COMMAND
-			"${CMAKE_COMMAND}" -E touch "${stampfile}"
-			DEPENDS
-			"${_idlfile}"
-			WORKING_DIRECTORY
-			"${CMAKE_CURRENT_SOURCE_DIR}"
-			COMMENT
-			"Processing ${_idlfile} with Java's idlj")
+		# Force re-cmake if idl file changes
+		configure_file("${_idl_abs}" "${stampfile}" COPY_ONLY)
 
-		# Make our additions to the user-specified variable:
-		# the stamp file (for dependency creation) and
-		# the wildcard (for javac to actually compile)
-		list(APPEND ${_varname}
-			"${stampfile}"
-			"${outdir}/*")
-		set(${_varname} ${${_varname}} PARENT_SCOPE)
+		if((NOT EXISTS "${outdir}") OR ("${_idl_abs}" IS_NEWER_THAN "${outdir}"))
+			file(REMOVE_RECURSE "${outdir}")
+			message(STATUS "Processing ${_idlfile} with Java's idlj")
+			execute_process(COMMAND
+				"${Java_IDLJ_COMMAND}" -fclient -fallTIE -td "${outdir}" ${ARGN} "${_idlfile}"
+				WORKING_DIRECTORY
+				"${CMAKE_CURRENT_SOURCE_DIR}")
+		endif()
+		file(GLOB_RECURSE _idl_output "${outdir}/*")
+
+		set(${_varname} ${_idl_output} PARENT_SCOPE)
 
 		# Clean up after ourselves on make clean
 		set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${outdir}" "${stampfile}")
