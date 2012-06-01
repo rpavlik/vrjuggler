@@ -59,12 +59,9 @@ add_jar(wizard
 
 
 # Set up custom command to copy finished jar to a more suitable place
-add_custom_target(tweek_java_extensions)
-set_target_properties(tweek_java_extensions PROPERTIES FOLDER "Convenience targets")
 
 foreach(JARTARGET ui wizard)
 	add_dependencies(${JARTARGET} tweek_java)
-	add_dependencies(tweek_java_extensions ${JARTARGET})
 	set_target_properties(${JARTARGET} PROPERTIES FOLDER "Tweek Java Extensions")
 	get_property(JAR TARGET ${JARTARGET} PROPERTY JAR_FILE)
 	vrjugglersuite_copy_and_install(TWEEK_EXT_COPIED_FILES
@@ -72,5 +69,9 @@ foreach(JARTARGET ui wizard)
 		tweek_java_extensions
 		"${JAR}")
 endforeach()
+
+add_custom_target(tweek_java_extensions DEPENDS ui wizard ${TWEEK_EXT_COPIED_FILES})
+add_dependencies(tweek_java_extensions ui wizard)
+set_target_properties(tweek_java_extensions PROPERTIES FOLDER "Convenience targets")
 
 set(TWEEK_EXT_BUILDTREE_JARS ${TWEEK_EXT_COPIED_FILES} CACHE INTERNAL "" FORCE)
