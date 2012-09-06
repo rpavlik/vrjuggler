@@ -35,7 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/md/WiN32/Util/ErrorImplWin32.h>
+#include <vpr/md/WIN32/Util/ErrorImplWin32.h>
 
 
 namespace vpr
