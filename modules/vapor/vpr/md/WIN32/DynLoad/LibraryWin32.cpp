@@ -148,7 +148,7 @@ void* LibraryWin32::findSymbol(const std::string& symbolName)
       throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
    }
 
-   return GetProcAddress(mLibrary, symbolName.c_str());
+   return reinterpret_cast<void*>(GetProcAddress(mLibrary, symbolName.c_str()));
 }
 
 void* LibraryWin32::findSymbolAndLibrary(const std::string& symbolName,
