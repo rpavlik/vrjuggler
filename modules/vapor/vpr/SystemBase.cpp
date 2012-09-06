@@ -59,11 +59,14 @@ extern "C"
 }
 
 #elif defined(VPR_OS_Windows)
-#  if _MSC_VER >= 1400
+#  if defined(_MSC_VER) && _MSC_VER >= 1400
 #     include <intrin.h>
 #  endif
-
-#  include <dbghelp.h>
+#  if defined(_MSC_VER)
+#     include <dbghelp.h>
+#  elif defined(__MINGW32__)
+#     include <imagehlp.h>
+#  endif
 #  include <iomanip>
 #  include <boost/format.hpp>
 #endif
