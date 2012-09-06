@@ -103,10 +103,6 @@ set(HEADERS
 
 add_definitions(-D_JCCL_BUILD_ "-DJCCL_ROOT_DIR=\"${CMAKE_INSTALL_PREFIX}\"" "-DJCCL_SHARE_DIR=\"${JCCL_SHARE_DIR}\"")
 
-if(WIN32)
-	add_definitions(-DCPPDOM_DYN_LINK -DBOOST_ALL_DYN_LINK)
-endif()
-
 add_library(jccl SHARED ${HEADERS} ${SOURCES})
 target_link_libraries(jccl
 	${VPR_LIBRARIES})
