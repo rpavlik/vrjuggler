@@ -37,7 +37,7 @@
 
 #include <iostream>
 #include <sstream>
-#include <cstdlib>
+#include <stdlib.h>
 #include <string>
 
 #if ! defined(WIN32) && ! defined(WIN64)
