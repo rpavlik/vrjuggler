@@ -17,11 +17,7 @@
 #include "isense.h"
 #include "timer.h"
 
-#ifdef VPR_OS_Windows
-#include <sys\timeb.h>
-#else
 #include <sys/timeb.h>
-#endif
 
 /* Old InterSense Code
 static struct timeb t;
