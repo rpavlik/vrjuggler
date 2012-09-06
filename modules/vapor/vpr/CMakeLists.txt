@@ -339,7 +339,12 @@ target_link_libraries(vpr
 	${DL_LIBRARY})
 
 if(WIN32)
-	target_link_libraries(vpr dbghelp rpcrt4)
+	if(MSVC)
+		target_link_libraries(vpr dbghelp)
+	else()
+		target_link_libraries(vpr imagehlp)
+	endif()
+	target_link_libraries(vpr rpcrt4 ws2_32)
 endif()
 
 set_target_properties(vpr PROPERTIES FOLDER "${VRJUGGLERSUITE_CORELIB_PROJECT_FOLDER}")
