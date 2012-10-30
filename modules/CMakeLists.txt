@@ -1,8 +1,6 @@
 add_subdirectory(vapor)
 add_subdirectory(tweek)
 add_subdirectory(jackal)
-if(BUILD_SONIX)
-	add_subdirectory(sonix)
-endif()
+add_subdirectory(sonix) # Required by one lousy file in vrjuggler
 add_subdirectory(gadgeteer)
 add_subdirectory(vrjuggler)
