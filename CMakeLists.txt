@@ -17,8 +17,6 @@ set(CPACK_PACKAGE_VERSION
 ###
 include(scripts/cmake/VRJugglerSuiteDefaultOptions.cmake)
 
-option(BUILD_SONIX "Should we build the Sonix library?" ON)
-
 ###
 # Recurse into subdirectories
 ###
