@@ -1,19 +1,8 @@
-message(STATUS "SONIX_BUILD_OPENAL enabled, so verifying dependencies for that plugin")
-find_package(ALUT REQUIRED)
 
 include_directories(${ALUT_INCLUDE_DIRS})
-
-add_library(OpenAL_snd
-	MODULE
+sonix_add_backend(OpenAL
 	OpenALSoundImplementation.cpp
 	OpenALSoundImplementation.h
 	openal.rc)
 
-target_link_libraries(OpenAL_snd sonix ${ALUT_LIBRARIES})
-
-
-set_target_properties(OpenAL_snd PROPERTIES FOLDER "Sonix plugins")
-
-install(TARGETS OpenAL_snd
-	LIBRARY DESTINATION lib/${SNX_LIB_DIR}/plugins COMPONENT sonix-runtime-openal
-	RUNTIME DESTINATION lib/${SNX_LIB_DIR}/plugins COMPONENT sonix-runtime-openal)
+target_link_libraries(OpenAL_snd ${ALUT_LIBRARIES})
