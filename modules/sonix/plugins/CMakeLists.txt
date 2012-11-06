@@ -10,10 +10,10 @@ function(sonix_add_backend _backend_name)
 	add_library(${_backend_name}_snd
 		MODULE ${ARGN})
 
-	target_link_libraries(${_backend_name}_drv sonix)
+	target_link_libraries(${_backend_name}_snd sonix)
 
-	set_target_properties(${_backend_name}_drv PROPERTIES FOLDER "Sonix backends")
-	install(TARGETS ${_backend_name}_drv
+	set_target_properties(${_backend_name}_snd PROPERTIES FOLDER "Sonix backends")
+	install(TARGETS ${_backend_name}_snd
 		LIBRARY DESTINATION lib/${SNX_LIB_DIR}/plugins COMPONENT sonix-runtime-openal
 		RUNTIME DESTINATION lib/${SNX_LIB_DIR}/plugins COMPONENT sonix-runtime-openal)
 	add_dependencies(sonix_backends ${_backend_name}_drv)
