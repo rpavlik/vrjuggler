@@ -228,13 +228,9 @@ bool InetAddrBOOST::operator== (const InetAddrBOOST& addr) const
 void InetAddrBOOST::setAddressValue(const vpr::Uint32 addrValue)
 {
    boost::asio::ip::address_v4 addr;
-   if (addrValue == INADDR_ANY)
+   if (addrValue != INADDR_ANY)
    {
-      addr = boost::asio::ip::address_v4::address_v4();
-   }
-   else
-   {
-      addr = boost::asio::ip::address_v4::address_v4(addrValue);
+      addr = boost::asio::ip::address_v4(addrValue);
    }
    mTcpAddr.address(addr);
    mUdpAddr.address(addr);

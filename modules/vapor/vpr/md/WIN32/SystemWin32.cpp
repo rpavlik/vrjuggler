@@ -35,8 +35,8 @@
 
 #include <vpr/vprConfig.h>
 
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include <vpr/md/WIN32/SystemWin32.h>
@@ -47,11 +47,18 @@
 #  define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
 
+#ifdef HAVE_TIMEZONE
+#include <sys/time.h>
+#endif
+
 namespace vpr
 {
 
 int SystemWin32::gettimeofday(vpr::TimeVal* tv, vpr::TimeZone* tz)
 {
+#ifdef HAVE_TIMEZONE
+   ::gettimeofday(tv, tz);
+#else
    FILETIME ft;
    unsigned __int64 tmpres = 0;
    static int tzflag;
@@ -80,7 +87,7 @@ int SystemWin32::gettimeofday(vpr::TimeVal* tv, vpr::TimeZone* tz)
       tz->tv_minuteswest = _timezone / 60;
       tz->tv_dsttime = _daylight;
    }
-
+#endif
    return 0;
 }
 

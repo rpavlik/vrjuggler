@@ -35,7 +35,9 @@
 
 // This must be defined to 0x0400 or higher in order to have the function
 // SignalObjectAndWait() declared.
+#if !defined(_WIN32_WINNT) ||  _WIN32_WINNT < 0x0400
 #define _WIN32_WINNT 0x0400
+#endif
 
 #include <vpr/vprConfig.h>
 
