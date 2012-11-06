@@ -28,7 +28,7 @@
 				BuildCommandLine="nmake all"
 				ReBuildCommandLine="nmake clean all"
 				CleanCommandLine="nmake clean"
-				Output="jccl_conifg.jar"
+				Output="jccl_config.jar"
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
 				ForcedIncludes=""
