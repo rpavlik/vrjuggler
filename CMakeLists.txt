@@ -5,6 +5,7 @@ project(VRJugglerSuite)
 ###
 # Configuration
 ###
+include(CTest)
 include(scripts/cmake/VRJugglerSuiteDefaultOptions.cmake)
 
 ###
