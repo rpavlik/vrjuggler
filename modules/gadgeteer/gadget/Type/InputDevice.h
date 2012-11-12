@@ -29,10 +29,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/mpl/copy_if.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 
 #include <vpr/vprTypes.h>
 
@@ -103,13 +100,7 @@ public:
     * @see writeObject()
     * @see readObject()
     */
-   typedef typename
-      boost::mpl::copy_if<
-           all_base_types
-         , boost::is_base_of<boost::mpl::_1, Base>
-         , boost::mpl::back_inserter<boost::mpl::vector<> >
-      >::type
-   type_list;
+   typedef typename gadget::type::get_ordered_bases<Base>::type type_list;
 
    /**
     * The unique identifier for this type instantiation. This is computed as a
@@ -117,7 +108,7 @@ public:
     * all_base_types.
     */
    static const type_id_type type_id =
-      gadget::type::compose_id<type_list>::type::value;
+      gadget::type::get_id<Base>::type::value;
 
    /** @name vpr::SerializableObject Overrides */
    //@{
@@ -125,14 +116,14 @@ public:
    {
       Input::writeObject(writer);
       Caller<WriteInvoker> caller(this, writer);
-      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(caller);
+      input_device_::for_each_ordered_base(caller);
    }
 
    virtual void readObject(vpr::ObjectReader* reader)
    {
       Input::readObject(reader);
       Caller<ReadInvoker> caller(this, reader);
-      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(caller);
+      input_device_::for_each_ordered_base(caller);
    }
    //@}
 
@@ -142,6 +133,10 @@ public:
    }
 
 private:
+   template<typename F>
+   static void for_each_ordered_base(F f) {
+      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(f);
+   }
    /**
     * This exists solely to allow abstract Gadgeteer device types (such as
     * gadget::Input) to be used in the type sequence that is used for

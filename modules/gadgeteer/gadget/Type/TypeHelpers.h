@@ -29,11 +29,27 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/mpl/times.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/bitor.hpp>
-#include <boost/mpl/find.hpp>
+// Used by pow
+#include <boost/mpl/range_c.hpp>
 #include <boost/mpl/fold.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/times.hpp>
+
+// Used by compute_id
+#include <boost/mpl/index_of.hpp>
+
+// Used by transform_to_ids
+#include <boost/mpl/transform.hpp>
+#include <boost/mpl/quote.hpp>
+
+// Used by compose_id
+#include <boost/mpl/bitor.hpp>
+
+// Used by get_ordered_bases
+#include <boost/mpl/copy_if.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <boost/mpl/back_inserter.hpp>
+#include <boost/mpl/vector/vector10.hpp>
 
 #include <gadget/Type/AllBaseTypes.h>
 
@@ -46,62 +62,72 @@ namespace detail
 
 /** @name Compile-Time Power-of Computation */
 //@{
-template<size_t Value, typename Exponent>
-struct pow
-   : boost::mpl::times<
-          boost::mpl::int_<Value>
-        , pow<Value, boost::mpl::int_<Exponent::value - 1> >
-     >::type
-{};
 
-// specialization for 0
-template<size_t Value>
-struct pow<Value, boost::mpl::int_<0> >
-   : boost::mpl::int_<1>::type
-{};
-//@}
+template<typename Value, typename Exponent>
+struct pow {
+  typedef boost::mpl::range_c<int, 0, Exponent::value> range;
+  typedef typename
+      boost::mpl::fold<
+           range
+         , boost::mpl::int_<1>
+         , boost::mpl::times<boost::mpl::_1, Value >
+      >::type
+   type;
+};
 
-}
+} // end of namespace detail
 
 namespace type
 {
 
 /** @name Metafunctions */
 //@{
-template<typename N>
-struct make_id
-{
-   typedef detail::pow<2, boost::mpl::int_<N::value> > type;
-};
 
-template<typename MaskType, typename Type>
-struct compute_id
-{
-   typedef typename boost::mpl::find<all_base_types, Type>::type::pos pos_type;
-   typedef typename
-      boost::mpl::bitor_<
-           MaskType
-         , typename make_id<pos_type>::type
-      >::type
-   type;
-};
+template<typename Type>
+struct compute_id : detail::pow<boost::mpl::int_<2>, typename boost::mpl::index_of<all_base_types, Type>::type > {};
+
+template<typename TypeList>
+struct transform_to_ids : boost::mpl::transform<TypeList, boost::mpl::quote1<compute_id> >::type {};
 
 template<typename TypeList>
 struct compose_id
 {
+   typedef typename transform_to_ids<TypeList>::type ids;
    typedef typename
       boost::mpl::fold<
-           TypeList
+           ids
          , boost::mpl::int_<0>
-         , compute_id<boost::mpl::_1, boost::mpl::_2>
+         , boost::mpl::bitor_<boost::mpl::_1, boost::mpl::_2>
       >::type
    type;
 };
+
+/**
+* Computes the ordered subset of all_base_types that is the list of base
+* types for this instantiation.
+*
+* @see writeObject()
+* @see readObject()
+*/
+template<typename T>
+struct get_ordered_bases {
+   typedef typename
+      boost::mpl::copy_if<
+           all_base_types
+         , boost::is_base_of<boost::mpl::_1, T>
+         , boost::mpl::back_inserter<boost::mpl::vector0<> >
+      >::type
+   type;
+};
+
+template<typename T>
+struct get_id : compose_id< typename get_ordered_bases<T>::type > {};
+
 //@}
 
-}
+} // end of namespace type
 
-}
+} // end of namespace gadget
 
 
 #endif /* _GADGET_TYPE_HELPERS_H_ */
