@@ -11,6 +11,11 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/VRJugglerSuiteDefaultOp
 ###
 vrjugglersuite_parse_version_file()
 
+# Since this is the main module, shout this version loud and proud.
+set_property(GLOBAL PROPERTY VRJ_MAJOR_VER ${MAJOR_VER_NUMBER})
+set_property(GLOBAL PROPERTY VRJ_MINOR_VER ${MINOR_VER_NUMBER})
+set_property(GLOBAL PROPERTY VRJ_PATCH_VER ${PATCH_VER_NUMBER})
+
 ###
 # Dependencies
 ###
