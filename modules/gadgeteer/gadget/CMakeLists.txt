@@ -312,6 +312,8 @@ target_link_libraries(gadget
 
 if(WIN32)
 	target_link_libraries(gadget comctl32)
+elseif(GADGET_USE_X11)
+	target_link_libraries(gadget ${X11_X11_LIB})
 endif()
 
 set_target_properties(gadget PROPERTIES FOLDER "${VRJUGGLERSUITE_CORELIB_PROJECT_FOLDER}")
