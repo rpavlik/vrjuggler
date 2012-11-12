@@ -39,8 +39,8 @@
 #include <boost/mpl/index_of.hpp>
 
 // Used by transform_to_ids
-#include <boost/mpl/transform_view.hpp>
-#include <boost/mpl/lambda.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/mpl/quote.hpp>
 
 // Used by compose_id
 #include <boost/mpl/bitor.hpp>
@@ -87,7 +87,7 @@ template<typename Type>
 struct compute_id : detail::pow<boost::mpl::int_<2>, typename boost::mpl::index_of<all_base_types, Type>::type > {};
 
 template<typename TypeList>
-struct transform_to_ids : boost::mpl::transform_view<TypeList, typename boost::mpl::lambda<compute_id<boost::mpl::_1> >::type >::type {};
+struct transform_to_ids : boost::mpl::transform<TypeList, boost::mpl::quote1<compute_id> >::type {};
 
 template<typename TypeList>
 struct compose_id
