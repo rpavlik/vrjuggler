@@ -80,7 +80,7 @@ install(DIRECTORY test
 	COMPONENT gadget-test)
 
 if(BUILD_TESTING)
-#	add_subdirectory(test)
+	add_subdirectory(test)
 endif()
 
 
