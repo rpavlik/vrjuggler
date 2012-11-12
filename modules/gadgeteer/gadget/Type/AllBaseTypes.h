@@ -58,7 +58,7 @@ namespace gadget
  *
  * @since 2.1.18
  */
-typedef boost::mpl::vector<
+struct device_base_types : boost::mpl::vector<
      Digital
    , Analog
    , Position
@@ -67,7 +67,7 @@ typedef boost::mpl::vector<
    , Glove
    , Rumble
    , Hat
-> device_base_types;
+> {};
 
 /**
  * The type list of all possible base types for input devices. This is
@@ -82,10 +82,10 @@ typedef boost::mpl::vector<
  *
  * @since 2.1.18
  */
-typedef boost::mpl::push_back<
+struct all_base_types : boost::mpl::push_back<
      device_base_types
    , KeyboardMouse
->::type all_base_types;
+>::type {};
 
 }
 
