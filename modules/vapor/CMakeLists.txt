@@ -207,6 +207,7 @@ else()
 		set(VPR_USE_LIBUUID OFF)
 	endif()
 endif()
+
 # MD5 library
 option(VPR_USE_EMBEDDED_MD5C "Use embedded MD5 code - currently the only option." ON)
 if(VPR_USE_EMBEDDED_MD5C)
