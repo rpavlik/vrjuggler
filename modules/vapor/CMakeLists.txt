@@ -68,7 +68,10 @@ endif()
 message(STATUS "VPR: Using ${VPR_DOMAIN} system - Boost IO: ${VPR_USE_BOOST}.")
 
 # Threading
-if(CMAKE_USE_PTHREADS_INIT)
+if(WIN32 AND CMAKE_USE_WIN32_THREADS_INIT)
+	message(STATUS "VPR: Using Win32 threads.")
+	set(VPR_USE_WINTHREADS 1)
+elseif(CMAKE_USE_PTHREADS_INIT)
 	message(STATUS "VPR: Using pthreads.")
 	set(VPR_THREAD_SCOPE PTHREAD_SCOPE_SYSTEM)
 	set(VPR_POSIX_C_SOURCE 1)
@@ -77,9 +80,6 @@ if(CMAKE_USE_PTHREADS_INIT)
 
 	# Until proven otherwise
 	set(VPR_HAVE_UNNAMED_POSIX_SEMAPHORE 1)
-elseif(CMAKE_USE_WIN32_THREADS_INIT)
-	message(STATUS "VPR: Using Win32 threads.")
-	set(VPR_USE_WINTHREADS 1)
 else()
 	message(FATAL_ERROR "VPR: Apparently unsupported thread type! ${CMAKE_THREADS_INIT}")
 endif()
