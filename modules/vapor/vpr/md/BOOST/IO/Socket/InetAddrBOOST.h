@@ -39,7 +39,6 @@
 #include <vpr/vprConfig.h>
 
 #include <sys/types.h>
-//#include <netinet/in.h>
 #include <string>
 #include <vector>
 #include <boost/asio.hpp>
