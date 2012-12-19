@@ -6,5 +6,5 @@ if(LIBUSB1_FOUND)
 	list(APPEND VRPN_LIBRARIES ${LIBUSB1_LIBRARIES})
 endif()
 
-gadgeteer_add_driver(VRPN vrpn.rc Vrpn.cpp Vrpn.h)
+gadgeteer_add_driver(VRPN vrpn.rc VRPNDevices.cpp Vrpn.cpp Vrpn.h VRPNText.cpp VRPNText.h)
 target_link_libraries(VRPN_drv ${VRPN_LIBRARIES})
