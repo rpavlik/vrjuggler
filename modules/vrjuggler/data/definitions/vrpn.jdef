@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings definition.version="3.1"?>
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="vrpn" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="VRPNText">
+      <abstract>false</abstract>
+      <help>Configure a VRPN Text (string) connection</help>
+      <parent>string_device</parent>
+	  <category>/Devices</category>
+      <property valuetype="string" variable="false" name="VRPNTracker">
+         <help>VRPN tracker (e.g. Tracker0@localhost)</help>
+         <value label="VRPNTracker" defaultvalue="Tracker0@localhost"/>
+      </property>
+   </definition_version>
    <definition_version version="1" label="VRPN">
       <abstract>false</abstract>
       <help>Configure an interface to an external VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more on VRPN&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
