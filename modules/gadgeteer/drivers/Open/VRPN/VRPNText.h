@@ -48,7 +48,7 @@ namespace gadget
       virtual ~VRPNText();
 
       /** Configures the device with a config chunk. */
-      virtual bool config( jccl::ConfigElementPtr c );
+      virtual bool config(jccl::ConfigElementPtr c);
 
       /** Begins sampling. */
       bool startSampling();
@@ -65,10 +65,10 @@ namespace gadget
       /** Returns what chunk type is associated with this class. */
       static std::string getElementType()
       {
-         return std::string( "vrpntext" );
+         return std::string("vrpntext");
       }
 
-      const StringData getStringData( int devNum = 0 )
+      const StringData getStringData(int devNum = 0)
       {
          return storedText;
       }
@@ -82,12 +82,12 @@ namespace gadget
 
 
    private:
-      void setStoredText( std::string const & text )
+      void setStoredText(std::string const & text)
       {
          storedText = text;
       }
 
-      static void VRPN_CALLBACK handle_text( void *userdata, const vrpn_TEXTCB t );
+      static void VRPN_CALLBACK handle_text(void *userdata, const vrpn_TEXTCB t);
 
       std::string storedText;
 
