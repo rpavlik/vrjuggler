@@ -45,6 +45,10 @@ namespace gadget
 	   : mIsActive(false)
 	{
 		//constructor
+		
+		vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+			<< "VRPN Text constructor" << std::endl
+            << vprDEBUG_FLUSH;
 	}
 
 	VRPNText::~VRPNText()
@@ -63,6 +67,9 @@ namespace gadget
 	   //Pull in tracker name and IP address from JCCL
 	   //e.g. mytracker@127.0.0.1
 	   name = c->getProperty<std::string>("device");
+	   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+			<<  "Device: " << name << std::endl
+            << vprDEBUG_FLUSH;
 
 	   return true;
 	}
@@ -157,17 +164,23 @@ namespace gadget
 	{
 	   if (this->isActive() == false)
 	   {
+		 vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+			<< "gadget::VRPNText not active returning false.\n"
+			<< std::endl << vprDEBUG_FLUSH;
 		  return false;
 	   }
 
 	   vpr::Thread::yield();
-
 	   //run VRPN mainloop
 	   text->mainloop();
 
 	   std::vector<StringData> temp;
 	   temp.push_back(storedText);
-
+	   if (!storedText.empty()) {
+		vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+			<< "gadget::VRPNText got something: " << storedText
+			<< std::endl << vprDEBUG_FLUSH;
+	   }
 	   addStringSample(temp);
 
 	   storedText.clear();
