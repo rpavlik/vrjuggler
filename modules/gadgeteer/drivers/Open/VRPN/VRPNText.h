@@ -98,7 +98,7 @@ namespace gadget
 
 			//VRPN name and IP address to connect to
 			//e.g. mytracker@127.0.0.1
-			const char *name;
+			std::string name;
 
 			vrpn_Tracker_Remote *tkr;
 			vrpn_Text_Receiver *text;

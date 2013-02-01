@@ -62,7 +62,7 @@ namespace gadget
 
 	   //Pull in tracker name and IP address from JCCL
 	   //e.g. mytracker@127.0.0.1
-	   name = c->getProperty<std::string>("VRPNTracker").c_str();
+	   name = c->getProperty<std::string>("device");
 
 	   return true;
 	}
@@ -118,9 +118,9 @@ namespace gadget
 				<< std::endl << vprDEBUG_FLUSH;
 
 			//Setup VRPN connection
-			tkr = new vrpn_Tracker_Remote(name);
-			text = new vrpn_Text_Receiver(name);
-			if (tkr == NULL || text == NULL) {
+			 std::cout << "Starting up VRPN Text connection: " << name << std::endl;
+			text = new vrpn_Text_Receiver(name.c_str());
+			if (text == NULL) {
 				vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
 				<< clrOutNORM(clrRED,"ERROR:")
 				<< "gadget::VRPNText unable to open VRPN connection.\n"
