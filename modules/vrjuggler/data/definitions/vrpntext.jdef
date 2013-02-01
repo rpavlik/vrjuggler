@@ -6,9 +6,9 @@
       <help>Configure a VRPN Text (string) connection</help>
       <parent>string_device</parent>
 	  <category>/Devices</category>
-      <property valuetype="string" variable="false" name="VRPNTracker">
-         <help>VRPN tracker (e.g. Tracker0@localhost)</help>
-         <value label="VRPNTracker" defaultvalue="Tracker0@localhost"/>
+      <property valuetype="string" variable="false" name="device">
+         <help>VRPN text device (e.g. Text0@localhost)</help>
+         <value label="device" defaultvalue="Text0@localhost"/>
       </property>
 	  <upgrade_transform/>
    </definition_version>
