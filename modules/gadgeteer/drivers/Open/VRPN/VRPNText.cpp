@@ -111,11 +111,6 @@ namespace gadget
 		  // Create a new thread to handle the sampling control
 		  try
 		  {
-			 mThread = new vpr::Thread(boost::bind(&VRPNText::controlLoop, this));
-			 mIsActive = true;
-			 vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-				<< "gadget::VRPNText sampling control thread created.\n"
-				<< std::endl << vprDEBUG_FLUSH;
 
 			//Setup VRPN connection
 			 std::cout << "Starting up VRPN Text connection: " << name << std::endl;
@@ -131,6 +126,12 @@ namespace gadget
 				text->register_message_handler(this, handle_text);
 
 				 mIsInitializing = false;
+				 
+				 mThread = new vpr::Thread(boost::bind(&VRPNText::controlLoop, this));
+				 mIsActive = true;
+				 vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+					<< "gadget::VRPNText sampling control thread created.\n"
+					<< std::endl << vprDEBUG_FLUSH;
 				 return true;   // success
 			}
 		  }
