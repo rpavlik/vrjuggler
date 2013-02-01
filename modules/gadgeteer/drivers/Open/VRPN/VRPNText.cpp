@@ -169,6 +169,8 @@ namespace gadget
 
 	   addStringSample(temp);
 
+	   storedText.clear();
+
 	   return true;
 	}
 
