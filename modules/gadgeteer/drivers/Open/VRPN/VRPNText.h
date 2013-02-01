@@ -69,7 +69,7 @@ namespace gadget
 			/** Returns what chunk type is associated with this class. */
 			static std::string getElementType()
 			{
-			  return std::string("VRPNText");
+			  return std::string("vrpntext");
 			}
 
 			const StringData getStringData(int devNum = 0)
