@@ -7,7 +7,7 @@
 	Patrick Carlson <carlsonp@iastate.edu>
 	Iowa State University Virtual Reality Applications Center
 	Human-Computer Interaction Graduate Program
-	
+
 */
 
 //           Copyright Iowa State University 2012.
@@ -28,9 +28,8 @@
 
 // Library/third-party includes
 #include <vrpn_Text.h>
-#include <vrpn_Tracker.h>
 #include <vrpn_Shared.h>
-#include <vrpn_FileConnection.h>
+#include <boost/shared_ptr.hpp>
 
 // Standard includes
 #include <string>
@@ -42,67 +41,62 @@ namespace gadget
 
 namespace gadget
 {
-	class VRPNText : public input_string_t
-	{
-		public:
-			VRPNText();
-			virtual ~VRPNText();
+   class VRPNText : public input_string_t
+   {
+   public:
+      VRPNText();
+      virtual ~VRPNText();
 
-			/** Configures the device with a config chunk. */
-			virtual bool config(jccl::ConfigElementPtr c);
+      /** Configures the device with a config chunk. */
+      virtual bool config( jccl::ConfigElementPtr c );
 
-			/** Begins sampling. */
-			bool startSampling();
+      /** Begins sampling. */
+      bool startSampling();
 
-			/** Main thread of control for this active object. */
-			void controlLoop();
+      /** Stops sampling. */
+      bool stopSampling();
 
-			/** Stops sampling. */
-			bool stopSampling();
+      /** Samples data. */
+      bool sample();
 
-			/** Samples data. */
-			bool sample();
+      /** Updates to the sampled data. */
+      void updateData();
 
-			/** Updates to the sampled data. */
-			void updateData();
+      /** Returns what chunk type is associated with this class. */
+      static std::string getElementType()
+      {
+         return std::string( "vrpntext" );
+      }
 
-			/** Returns what chunk type is associated with this class. */
-			static std::string getElementType()
-			{
-			  return std::string("vrpntext");
-			}
+      const StringData getStringData( int devNum = 0 )
+      {
+         return storedText;
+      }
 
-			const StringData getStringData(int devNum = 0)
-			{
-			  return storedText;
-			}
+      /** Checks if the device is active. */
+      bool isActive()
+      {
+         return text;
+      }
 
-			/** Checks if the device is active. */
-			bool isActive()
-			{
-			  return mIsActive;
-			}
 
-			void setStoredText(std::string text)
-			{
-				storedText = text;
-			}
 
-		private:
-			static void VRPN_CALLBACK handle_text(void *userdata, const vrpn_TEXTCB t);
+   private:
+      void setStoredText( std::string const & text )
+      {
+         storedText = text;
+      }
 
-			std::string storedText;
+      static void VRPN_CALLBACK handle_text( void *userdata, const vrpn_TEXTCB t );
 
-			bool mIsActive;
-			bool mIsInitializing;
+      std::string storedText;
 
-			//VRPN name and IP address to connect to
-			//e.g. mytracker@127.0.0.1
-			std::string name;
+      //VRPN name and IP address to connect to
+      //e.g. mytracker@127.0.0.1
+      std::string name;
 
-			vrpn_Tracker_Remote *tkr;
-			vrpn_Text_Receiver *text;
-	};
+      boost::shared_ptr<vrpn_Text_Receiver> text;
+   };
 
 } // End of gadget namespace
 
