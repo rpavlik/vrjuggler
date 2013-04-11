@@ -378,18 +378,21 @@ protected:
       // Update the frame stamp with information from this frame.
       mFrameStamp->setFrameNumber(mFrameNumber);
 
-      const double head_time(
-         mKernel->getUsers()[0]->getHeadPosProxy()->getTimeStamp().secd()
-      );
-      mFrameStamp->setReferenceTime(head_time);
+      if (mKernel->getUsers().size() > 0)
+      {
+         const double head_time(
+            mKernel->getUsers()[0]->getHeadPosProxy()->getTimeStamp().secd()
+         );
+         mFrameStamp->setReferenceTime(head_time);
 
       // This is available in OSG 1.9 and newer.
       // If OPENSCENEGRAPH_MAJOR_VERSION is defined, we know the version is
       // greater than or equal to 2.0.
 #if defined(OPENSCENEGRAPH_MAJOR_VERSION) || \
     OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_VERSION_MAJOR >= 2
-      mFrameStamp->setSimulationTime(head_time);
+         mFrameStamp->setSimulationTime(head_time);
 #endif
+      }
 
       // Set up the time and frame number so time-dependent things (animations,
       // particle system) function correctly.
