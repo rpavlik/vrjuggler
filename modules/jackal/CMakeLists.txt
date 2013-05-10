@@ -72,9 +72,11 @@ set(SOURCES
 	rtrc/jccl/RTRC/ConfigElementHandler.cpp
 	rtrc/jccl/RTRC/ConfigManager.cpp
 	rtrc/jccl/RTRC/DepChecker.cpp
-	rtrc/jccl/RTRC/DependencyManager.cpp
+	rtrc/jccl/RTRC/DependencyManager.cpp)
 
-	jccl.rc)
+if(MSVC)
+	list(APPEND SOURCES jccl.rc)
+endif()
 
 set(HEADERS
 	common/jccl/AutoLink.h
