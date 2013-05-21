@@ -4,6 +4,7 @@ find_jar(TABLELAYOUT_JAR
 	TableLayout
 	PATHS
 	${EXTERNALS}/TableLayout)
+
 set(CMAKE_JAVA_INCLUDE_PATH ${TWEEK_JAVA_CLASSPATH} "${TABLELAYOUT_JAR}")
 
 add_jar(ui

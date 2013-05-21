@@ -282,7 +282,8 @@ endforeach()
 vrjugglersuite_copy_and_install(TWEEK_COPIED_FILES
 	"${TWEEK_SHARE_DIR}/java"
 	tweek_java
-	${BUNDLED_JAR_DEPENDENCIES})
+	${BUNDLED_JAR_DEPENDENCIES}
+	"${CMAKE_CURRENT_SOURCE_DIR}/java.security.policy.txt")
 
 add_custom_target(tweek_copy_jar_deps
 	DEPENDS ${TWEEK_COPIED_FILES})
