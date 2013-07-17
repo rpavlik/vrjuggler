@@ -243,7 +243,7 @@
 				OutputFile="$(OutDir)/VRPN_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=";&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(VRPN_ROOT)\quat\pc_win32\Debug&quot;;&quot;$(VRPN_ROOT)\vrpn\pc_win32\Debug&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(VRPN_ROOT)\quat\pc_win32\Debug&quot;;&quot;$(VRPN_ROOT)\vrpn\pc_win32\Debug&quot;;&quot;$(VRPN_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/VRPN_drv_d.pdb"
 				SubSystem="1"
