@@ -7,3 +7,6 @@ configure
 *.vcproj.*.user
 *.ncb
 *.suo
+DebugDLL/
+ReleaseDLL/
+DebugRtDll/
