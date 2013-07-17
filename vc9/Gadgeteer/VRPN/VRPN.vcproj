@@ -552,6 +552,14 @@
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\Vrpn.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\VRPNDevices.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\VRPNText.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -559,6 +567,10 @@
 			>
 			<File
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\Vrpn.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\VRPNText.h"
 				>
 			</File>
 		</Filter>
