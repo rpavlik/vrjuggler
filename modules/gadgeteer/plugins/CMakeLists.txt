@@ -14,8 +14,8 @@ function(gadgeteer_add_plugin _plugin_name)
 
 	set_target_properties(${_plugin_name} PROPERTIES FOLDER "Gadgeteer plugins")
 	install(TARGETS ${_plugin_name}
-		LIBRARY DESTINATION lib/${GADGET_LIB_DIR}/plugins COMPONENT gadgeteer-runtime-plugins
-		RUNTIME DESTINATION lib/${GADGET_LIB_DIR}/plugins COMPONENT gadgeteer-runtime-plugins)
+		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/plugins COMPONENT gadgeteer-runtime-plugins
+		RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/plugins COMPONENT gadgeteer-runtime-plugins)
 	add_dependencies(gadgeteer_plugins ${_plugin_name})
 endfunction()
 
