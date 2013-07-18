@@ -27,6 +27,7 @@ else()
 endif()
 option(BUILD_VERSIONED_DIRECTORIES "Should we version the directories for plugins and data?" ${DEFAULT_VERSIONED})
 
+# Java support added in CMake 2.8.6
 if(CMAKE_VERSION VERSION_GREATER 2.8.5)
 	find_package(Java)
 	find_package(IDLJ)
