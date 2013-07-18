@@ -4,3 +4,5 @@
 /* Jackal version string */
 #cmakedefine JCCL_VERSION_DOT @JCCL_VERSION_DOT@
 
+/* Library directory */
+#define JCCL_LIBDIR "@CMAKE_INSTALL_LIBDIR@"

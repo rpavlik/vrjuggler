@@ -10,3 +10,5 @@
 /* Gadgeteer version string */
 #cmakedefine GADGET_VERSION_DOT "@GADGET_VERSION_DOT@"
 
+/* Library directory */
+#define GADGET_LIBDIR "@CMAKE_INSTALL_LIBDIR@"
