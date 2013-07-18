@@ -14,8 +14,8 @@ function(gadgeteer_add_driver _driver_name)
 
 	set_target_properties(${_driver_name}_drv PROPERTIES FOLDER "Gadgeteer drivers")
 	install(TARGETS ${_driver_name}_drv
-		LIBRARY DESTINATION lib/${GADGET_LIB_DIR}/drivers COMPONENT gadgeteer-runtime-drivers
-		RUNTIME DESTINATION lib/${GADGET_LIB_DIR}/drivers COMPONENT gadgeteer-runtime-drivers)
+		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/drivers COMPONENT gadgeteer-runtime-drivers
+		RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/drivers COMPONENT gadgeteer-runtime-drivers)
 	add_dependencies(gadgeteer_drivers ${_driver_name}_drv)
 endfunction()
 

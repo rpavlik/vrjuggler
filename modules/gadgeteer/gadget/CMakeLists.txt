@@ -261,7 +261,7 @@ set_target_properties(gadget PROPERTIES FOLDER "${VRJUGGLERSUITE_CORELIB_PROJECT
 vrjugglersuite_set_versioned_library_output_name(gadget)
 
 install(TARGETS gadget EXPORT gadgetexport
-	LIBRARY DESTINATION lib COMPONENT gadget-runtime
-	RUNTIME DESTINATION bin COMPONENT gadget-runtime
-	ARCHIVE DESTINATION lib COMPONENT gadget-dev)
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT gadget-runtime
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT gadget-runtime
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT gadget-dev)
 

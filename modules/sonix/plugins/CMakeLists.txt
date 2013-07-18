@@ -33,8 +33,8 @@ function(sonix_add_backend _backend_name)
 		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${buildtype} "${BASELIBDIR}/${${buildtype}_DIR}")
 
 		install(TARGETS ${_backend_name}_snd
-			LIBRARY DESTINATION lib/${SNX_LIB_DIR}/plugins/${${buildtype}_DIR} COMPONENT sonix-runtime-openal
-			RUNTIME DESTINATION lib/${SNX_LIB_DIR}/plugins/${${buildtype}_DIR} COMPONENT sonix-runtime-openal
+			LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${SNX_LIB_DIR}/plugins/${${buildtype}_DIR} COMPONENT sonix-runtime-openal
+			RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/${SNX_LIB_DIR}/plugins/${${buildtype}_DIR} COMPONENT sonix-runtime-openal
 			CONFIGURATIONS ${buildtype})
 	endforeach()
 endfunction()
