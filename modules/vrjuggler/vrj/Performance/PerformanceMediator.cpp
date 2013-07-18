@@ -149,13 +149,15 @@ namespace vrj
          return;
       }
 
-#if defined(VPR_OS_IRIX) && defined(_ABIN32)
-      const std::string bit_suffix("32");
+#if defined(VRJ_LIBDIR)
+      const fs::path lib_subdir(VRJ_LIBDIR);
+#elif defined(VPR_OS_IRIX) && defined(_ABIN32)
+      const fs::path lib_subdir("lib32");
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
       defined(VPR_OS_Linux) && defined(__x86_64__)
-      const std::string bit_suffix("64");
+      const fs::path lib_subdir("lib64");
 #else
-      const std::string bit_suffix("");
+      const fs::path lib_subdir("lib");
 #endif
 
       const std::string vrjuggler_subdir_base("vrjuggler");
@@ -190,7 +192,7 @@ namespace vrj
 #else
          fs::path(base_dir, fs::native)
 #endif
-            / (std::string("lib") + bit_suffix) /
+            / lib_subdir /
             std::string(vrjuggler_subdir) / std::string("plugins");
 
 #if defined(VJ_DEBUG)
