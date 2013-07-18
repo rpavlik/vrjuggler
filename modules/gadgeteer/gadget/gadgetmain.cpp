@@ -223,15 +223,6 @@ extern "C" void __attribute ((constructor)) gadgetLibraryInit()
             );
             lib_file = fs::system_complete(lib_file);
 
-#if defined(VPR_OS_IRIX) && defined(_ABIN32)
-            const std::string bit_suffix("32");
-#elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
-      defined(VPR_OS_Linux) && defined(__x86_64__)
-            const std::string bit_suffix("64");
-#else
-            const std::string bit_suffix("");
-#endif
-
             // Get the directory containing this shared library.
             const fs::path lib_path = lib_file.branch_path();
 
@@ -241,7 +232,16 @@ extern "C" void __attribute ((constructor)) gadgetLibraryInit()
 
             // Use the lib subdirectory to figure out when we have found the
             // root of the Gadgeteer installation tree.
-            const fs::path lib_subdir(std::string("lib") + bit_suffix);
+#if defined(GADGET_LIBDIR)
+            const fs::path lib_subdir(GADGET_LIBDIR);
+#elif defined(VPR_OS_IRIX) && defined(_ABIN32)
+            const fs::path lib_subdir("lib32");
+#elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
+      defined(VPR_OS_Linux) && defined(__x86_64__)
+            const fs::path lib_subdir("lib64");
+#else
+            const fs::path lib_subdir("lib");
+#endif
 
             bool found(false);
             while ( ! found && ! base_dir.empty() )

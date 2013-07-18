@@ -58,14 +58,15 @@ boost::filesystem::path getDefaultPluginRoot()
          base_dir = GADGET_ROOT_DIR;
       }
    }
-
-#if defined(VPR_OS_IRIX) && defined(_ABIN32)
-   const std::string bit_suffix("32");
+#if defined(GADGET_LIBDIR)
+   const fs::path lib_dir(GADGET_LIBDIR);
+#elif defined(VPR_OS_IRIX) && defined(_ABIN32)
+    onst fs::path lib_dir("lib32");
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
-   defined(VPR_OS_Linux) && defined(__x86_64__)
-   const std::string bit_suffix("64");
+      defined(VPR_OS_Linux) && defined(__x86_64__)
+   const fs::path lib_dir("lib64");
 #else
-   const std::string bit_suffix("");
+   const fs::path lib_dir("lib");
 #endif
 
    const std::string gadgeteer_subdir_base("gadgeteer");
@@ -99,7 +100,7 @@ boost::filesystem::path getDefaultPluginRoot()
 #else
       fs::path(base_dir, fs::native)
 #endif
-         / (std::string("lib") + bit_suffix) / gadgeteer_subdir;
+      / lib_dir / gadgeteer_subdir;
 
    return default_plugin_dir;
 }
