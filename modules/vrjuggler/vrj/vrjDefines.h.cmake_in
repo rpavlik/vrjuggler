@@ -14,3 +14,6 @@
 /* VR Juggler version string */
 #cmakedefine VRJ_VERSION_DOT "@VRJ_VERSION_DOT@"
 
+/* Library directory */
+#define VRJ_LIBDIR "@CMAKE_INSTALL_LIBDIR@"
+

@@ -207,6 +207,8 @@
 /* Define if using Windows threads. */
 #cmakedefine VPR_USE_WINTHREADS
 
+/* Library directory */
+#define VPR_LIBDIR "@CMAKE_INSTALL_LIBDIR@"
 
 #ifdef VPR_OS_Windows
 /* Define to unsigned int if the sigset_t type is not available. */
