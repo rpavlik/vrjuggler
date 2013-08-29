@@ -61,7 +61,7 @@ boost::filesystem::path getDefaultPluginRoot()
 #if defined(GADGET_LIBDIR)
    const fs::path lib_dir(GADGET_LIBDIR);
 #elif defined(VPR_OS_IRIX) && defined(_ABIN32)
-    onst fs::path lib_dir("lib32");
+   const fs::path lib_dir("lib32");
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
       defined(VPR_OS_Linux) && defined(__x86_64__)
    const fs::path lib_dir("lib64");
