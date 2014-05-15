@@ -21,7 +21,7 @@ add_custom_target(sonix_backends)
 set_target_properties(sonix_backends PROPERTIES FOLDER "${VRJUGGLERSUITE_META_PROJECT_FOLDER}")
 
 function(sonix_add_backend _backend_name)
-	add_definitions(-D_SNX_PLUGIN_BUILD_)
+	add_definitions(-D_SNX_PLUGIN_BUILD_ -DNO_SELF_REGISTER)
 	add_library(${_backend_name}_snd
 		MODULE ${ARGN})
 
