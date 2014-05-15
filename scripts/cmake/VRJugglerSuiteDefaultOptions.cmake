@@ -144,7 +144,7 @@ function(vrjugglersuite_parse_version_file)
 
 		math(EXPR VER_NUMBER "${CMAKE_MATCH_1} * 1000000 + ${CMAKE_MATCH_2} * 1000 + ${CMAKE_MATCH_3}")
 		set(VER_NUMBER "${VER_NUMBER}" PARENT_SCOPE)
-		set(VER_STRING "\"${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3}\"" PARENT_SCOPE)
+		set(VER_STRING "\"${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3} (CMake build)${VER_STRING_EXTRAS}\"" PARENT_SCOPE)
 		message(STATUS "")
 		message(STATUS "Configuring ${PROJECT_NAME} ${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3}")
 
