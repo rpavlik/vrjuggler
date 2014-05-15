@@ -17,6 +17,7 @@ function(gadgeteer_add_driver _driver_name)
 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/drivers COMPONENT gadgeteer-runtime-drivers
 		RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/drivers COMPONENT gadgeteer-runtime-drivers)
 	add_dependencies(gadgeteer_drivers ${_driver_name}_drv)
+	message(STATUS "Gadgeteer: building driver ${_driver_name}")
 endfunction()
 
 

@@ -17,6 +17,7 @@ function(gadgeteer_add_plugin _plugin_name)
 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/plugins COMPONENT gadgeteer-runtime-plugins
 		RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/${GADGET_LIB_DIR}/plugins COMPONENT gadgeteer-runtime-plugins)
 	add_dependencies(gadgeteer_plugins ${_plugin_name})
+	message(STATUS "Gadgeteer: building plugin ${_plugin_name}")
 endfunction()
 
 add_subdirectory(ApplicationBarrierManager)
