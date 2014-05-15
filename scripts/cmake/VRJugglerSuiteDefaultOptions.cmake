@@ -154,6 +154,13 @@ function(vrjugglersuite_parse_version_file)
 
 endfunction()
 
+function(vrjugglersuite_set_project_version_vars _varprefix)
+		set(${_varprefix}_VERSION_DOT "${MAJOR_VER_NUMBER}.${MINOR_VER_NUMBER}" PARENT_SCOPE)
+
+		if(BUILD_VERSIONED_DIRECTORIES)
+			set(${_varprefix}_USE_VERSIONING TRUE PARENT_SCOPE)
+		endif()
+endfunction()
 
 # Copy files over to the right spot in build tree
 # _varname: variable name to append the destination file's name to (for a custom target dependency)

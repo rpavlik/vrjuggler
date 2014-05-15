@@ -40,6 +40,7 @@ endif()
 
 include_directories(${SNX_INCLUDE_DIRECTORIES})
 
+vrjugglersuite_set_project_version_vars(SNX)
 if(BUILD_VERSIONED_DIRECTORIES)
 	set(SNX_SHARE_DIR ${CMAKE_INSTALL_DATADIR}/sonix-${MAJOR_VER_NUMBER}.${MINOR_VER_NUMBER})
 	set(SNX_LIB_DIR sonix-${MAJOR_VER_NUMBER}.${MINOR_VER_NUMBER})
