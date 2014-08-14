@@ -419,7 +419,7 @@ std::vector<jccl::ConfigElementPtr> ConfigElement::getChildElements() const
    for ( unsigned int i = 0; i < prop_defs.size(); ++i )
    {
       VarType var_type = prop_defs[i].getVarType();
-      if ( (var_type == T_CHILD_ELEMENT) )   // If property is a child element
+      if ( var_type == T_CHILD_ELEMENT )   // If property is a child element
       {
          prop_token = prop_defs[i].getToken();         // Get the property name
          unsigned int num_props = getNum(prop_token);    // How many entries
