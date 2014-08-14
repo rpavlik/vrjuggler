@@ -96,7 +96,7 @@ ISD_GET_HARDW_INFO_FN _ISD_GetStationHardwareInfo   = NULL;
 //==========================================================================================
 static DLL *ISD_LoadLib( const char *driver_name )
 {
-    if(hLib = dll_load( driver_name ))
+    if((hLib = dll_load( driver_name )))
     {
         _ISD_OpenTracker            = ( ISD_OPEN_FN )           dll_entrypoint( hLib, "ISD_OpenTracker" );
         _ISD_OpenAllTrackers        = ( ISD_OPEN_ALL_FN )       dll_entrypoint( hLib, "ISD_OpenAllTrackers" );
