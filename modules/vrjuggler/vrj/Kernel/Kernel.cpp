@@ -732,8 +732,8 @@ void Kernel::changeApplication(App* newApp)
 
    // If the new application is NULL OR we have an old Draw Manager that is
    // different from the new one, then stop the current Draw Manager.
-   if ( NULL == newApp || NULL != mDrawManager &&
-        newApp->getDrawManager() != mDrawManager )
+   if ( NULL == newApp || ( NULL != mDrawManager &&
+        newApp->getDrawManager() != mDrawManager ) )
    {
       stopDrawManager();
       cfg_mgr->removeConfigElementHandler(mDrawManager);
@@ -741,8 +741,8 @@ void Kernel::changeApplication(App* newApp)
 
    // If the new application is NULL OR we have an old Sound Manager that is
    // different from the new one, then stop the current Sound Manager.
-   if ( NULL == newApp || NULL != mSoundManager &&
-        newApp->getSoundManager() != mSoundManager )
+   if ( NULL == newApp || ( NULL != mSoundManager &&
+        newApp->getSoundManager() != mSoundManager ) )
    {
       stopSoundManager();
       cfg_mgr->removeConfigElementHandler(mSoundManager);
