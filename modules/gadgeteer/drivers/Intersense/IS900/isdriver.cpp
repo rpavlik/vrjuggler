@@ -51,9 +51,9 @@ extern InterSenseTrackerType ISD_tracker[ISD_MAX_TRACKERS];
 ******************************************************************************/
 BOOL ISD_detectTrackerOld(InterSenseTrackerType *tracker/*, DWORD commPort*/)
 {
-    char   *systemName[MAX_HARDWARE_VERSIONS] =
+    const char   *systemName[MAX_HARDWARE_VERSIONS] =
               {"IS-300 Series", "IS-600 Series", "IS-900 Series", "InterTrax", "Unknown"};
-    char   *message[4] = {"first", "second", "third", "fourth"};
+    const char   *message[4] = {"first", "second", "third", "fourth"};
 
     WORD   numTracker;
 //    float  startTime;
