@@ -1,0 +1,9 @@
+archivesBaseName 'Viewers'
+sourceSets {
+    main {
+        java {
+            srcDir '../treeviewer'
+            srcDir '../iconviewer'
+        }
+    }
+}

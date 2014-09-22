@@ -1,0 +1,15 @@
+
+sourceSets {
+    main {
+        java {
+            srcDir 'gui'
+            srcDir 'text'
+            source 'EnvironmentServiceImpl.java', 'GlobalPreferencesServiceImpl.java', 'Tweek.java', 'TweekCore.java'
+            /* todo TweekAppListener.java only on mac */
+        }
+        resources {
+            srcDir 'gui'
+            srcDir 'text'
+        }
+    }
+}
