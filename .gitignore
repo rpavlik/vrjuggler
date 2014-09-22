@@ -7,3 +7,5 @@ configure
 *.vcproj.*.user
 *.ncb
 *.suo
+.gradle/
+gradle-app.setting
