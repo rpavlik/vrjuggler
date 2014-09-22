@@ -9,3 +9,5 @@ configure
 *.suo
 .gradle/
 gradle-app.setting
+!build.gradle
+!settings.gradle
