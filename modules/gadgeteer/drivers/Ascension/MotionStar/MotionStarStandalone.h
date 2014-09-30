@@ -36,10 +36,10 @@
 
 #include <vpr/vpr.h>
 
-#if defined(__GNUC__) && __GNUC__ >= 4
-#  include <tr1/unordered_map>
-#elif defined(_MSC_VER) && _MSC_VER >= 1500
+#if __cplusplus >= 200103L || defined(_LIBCPP_VERSION) || (defined(_MSC_VER) && _MSC_VER >= 1500)
 #  include <unordered_map>
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#  include <tr1/unordered_map>
 #elif BOOST_VERSION >= 103600
 #  include <boost/unordered_map.hpp>
 
@@ -1558,7 +1558,9 @@ private:
     * be trying to access (zero-based) index 5 as the largest rahter than
     * index 4.
     */
-#if defined(__GNUC__) && __GNUC__ >= 4 || defined(_MSC_VER) && _MSC_VER >= 1500
+#if __cplusplus >= 200103L || defined(_LIBCPP_VERSION)
+   typedef std::unordered_map<int, int> addr_sensor_map_t;
+#elif defined(__GNUC__) && __GNUC__ >= 4 || defined(_MSC_VER) && _MSC_VER >= 1500
    typedef std::tr1::unordered_map<int, int> addr_sensor_map_t;
 #elif BOOST_VERSION >= 103600
    typedef boost::unordered_map<int, int> addr_sensor_map_t;

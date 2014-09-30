@@ -31,10 +31,10 @@
 
 #include <boost/version.hpp>
 
-#if defined(__GNUC__) && __GNUC__ >= 4
-#  include <tr1/unordered_map>
-#elif defined(_MSC_VER) && _MSC_VER >= 1500
+#if __cplusplus >= 200103L || defined(_LIBCPP_VERSION) || (defined(_MSC_VER) && _MSC_VER >= 1500)
 #  include <unordered_map>
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#  include <tr1/unordered_map>
 #elif BOOST_VERSION >= 103600
 #  include <boost/unordered_map.hpp>
 #elif defined(VPR_HASH_MAP_INCLUDE)
@@ -262,7 +262,11 @@ private:
    node_list_t                  mNodes;         /**< List of nodes in network. */
    vpr::InetAddr                mListenAddr;    /**< Address to listen for incoming connections on. */
 
-#if defined(__GNUC__) && __GNUC__ >= 4 || defined(_MSC_VER) && _MSC_VER >= 1500
+#if __cplusplus >= 200103L || defined(_LIBCPP_VERSION)
+   typedef std::unordered_map<vpr::GUID
+                              , PacketHandlerPtr
+                              , vpr::GUID::hash> packet_handler_map_t;
+#elif defined(__GNUC__) && __GNUC__ >= 4 || (defined(_MSC_VER) && _MSC_VER >= 1500)
    typedef std::tr1::unordered_map<vpr::GUID
                                 , PacketHandlerPtr
                                 , vpr::GUID::hash> packet_handler_map_t;

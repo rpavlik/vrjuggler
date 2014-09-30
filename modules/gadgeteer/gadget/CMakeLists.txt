@@ -220,6 +220,7 @@ if(WIN32)
 elseif(BUILD_WITH_COCOA)
 	set(GADGET_USE_COCOA 1)
 	message(STATUS "Gadgeteer: Using Cocoa input for keyboard/mouse device")
+  find_library(COCOA_LIB Cocoa)
 	list(APPEND SOURCES 
 		Devices/KeyboardMouseDevice/InputAreaCocoa.mm
 		Devices/KeyboardMouseDevice/InputViewCocoa.mm
@@ -253,6 +254,8 @@ target_link_libraries(gadget
 
 if(WIN32)
 	target_link_libraries(gadget comctl32)
+elseif(BUILD_WITH_COCOA)
+  target_link_libraries(gadget ${COCOA_LIB})
 elseif(GADGET_USE_X11)
 	target_link_libraries(gadget ${X11_X11_LIB})
 endif()
