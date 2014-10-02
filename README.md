@@ -8,31 +8,20 @@ The Juggler Team
 ----------------------------------------------------------------------------
 ##Table of Contents
 
+* [Introduction](#introduction)
 
+* [Compiling](#compiling)
 
-  Introduction
+* [Modules](#modules)
+  * [VR Juggler](#vr-juggler)
+  * [VR Juggler Portable Runtime (VPR)](#vr-juggler-portable-runtime-vpr)
+  * [Juggler Configuration and Control Library (JCCL)](#juggler-configuration-and-control-library-jccl)
+  * [Gadgeteer](#gadgeteer)
+  * [Sonix](#sonix)
+  * [Tweek](#tweek)
+  * [VRJConfig](#vrjconfig)
 
-  Compiling
-
-  Modules
-
-
-        VR Juggler
-
-        VR Juggler Portable Runtime (VPR)
-
-        Juggler Configuration and Control Library (JCCL)
-
-        Gadgeteer
-
-        Sonix
-
-        Tweek
-
-        VRJConfig
-
-
-  VR Juggler 2.x
+* [VR Juggler 2.x](#vr-juggler-2.x)
 
 ##Introduction
 
