@@ -1,5 +1,4 @@
-
-Juggler Project Overview
+#Juggler Project Overview
 
 
 The Juggler Team
@@ -7,7 +6,7 @@ The Juggler Team
  $Date$
 
 ----------------------------------------------------------------------------
- Table of Contents
+##Table of Contents
 
 
 
@@ -35,8 +34,7 @@ The Juggler Team
 
   VR Juggler 2.x
 
-
-Introduction
+##Introduction
 
  Congratulations, you have downloaded the source code to the Juggler
  Project, open source software for virtual reality from the Virtual Reality
@@ -47,13 +45,13 @@ Introduction
  found within the specific module directories and on the VR Juggler website.
 
 
-Compiling
+##Compiling
 
  For information on compiling the source code, refer to either the
  INSTALL.txt or INSTALL.html file found in this directory.
 
 
-Modules
+##Modules
 
  The Juggler Project is made up of several modules that have evolved from
  the original VR Juggler source tree. Within this section, we describe each
@@ -61,15 +59,15 @@ Modules
  to VR Juggler 1.0.
 
 
-VR Juggler
+###VR Juggler
 
 
-Directory
+####Directory
 
  juggler/modules/vrjuggler
 
 
-Description
+####Description
 
  VR Juggler is still VR Juggler. There are many new features in VR Juggler
  since the 1.0 series, but in essence, it is still the same familiar tool.
@@ -79,15 +77,15 @@ Description
  of VR Juggler is given in the following section.
 
 
-VR Juggler Portable Runtime (VPR)
+###VR Juggler Portable Runtime (VPR)
 
 
-Directory
+####Directory
 
  juggler/modules/vapor
 
 
-Description
+####Description
 
  VPR is the foundation for all the Juggler modules. It provides an object-
  oriented, cross-platform abstraction layer to common operating system
@@ -106,7 +104,6 @@ Description
 
 
 *  POSIX (UNIX-based platforms only)
-
 *  NSPR (all platforms, required on Solaris)
 
 
@@ -129,15 +126,15 @@ Description
  to modules/vapor/INSTALL.txt.
 
 
-Juggler Configuration and Control Library (JCCL)
+###Juggler Configuration and Control Library (JCCL)
 
 
-Directory
+####Directory
 
  juggler/modules/jackal
 
 
-Description
+####Description
 
  JCCL provides the configuration layer for VR Juggler and other modules. The
  config chunks and reusable configuration editor JavaBeans come from JCCL.
@@ -147,8 +144,8 @@ Description
 
  To build the JCCL C++ library, CppDOM is required for parsing XML. CppDOM
  is a lightweight XML parser written in C++ and designed to provide an
- interface similar to JDOM. More information can be found at http://xml-
- cppdom.sourceforge.net/.
+ interface similar to JDOM. More information can be found at
+ http://xml-cppdom.sourceforge.net/.
 
  To build the configuration editor JavaBeans, JDOM and the Tweek Java API
  are required. Tweek is another module in the Juggler Project, and it will
@@ -157,15 +154,15 @@ Description
  jdom.
 
 
-Gadgeteer
+###Gadgeteer
 
 
-Directory
+####Directory
 
  juggler/modules/gadgeteer
 
 
-Description
+####Description
 
  Gadgeteer is made up of the code that was formerly in the VR Juggler 1.0
  Input directory. It contains all the drivers used for VR Juggler input
@@ -177,15 +174,15 @@ Description
  time.
 
 
-Sonix
+###Sonix
 
 
-Directory
+####Directory
 
  juggler/modules/sonix
 
 
-Description
+####Description
 
  Sonix provides an interface useful to many simple VR and entertainment
  applications to trigger and position sounds in 3D. This library provides
@@ -200,15 +197,15 @@ Description
  portable.
 
 
-Tweek
+###Tweek
 
 
-Directory
+###Directory
 
  juggler/modules/tweek
 
 
-Description
+###Description
 
  Tweek is a cross-platform, cross-language library consisting of a C++ API
  and a Java API. Its purpose is to provide a convenient mechanism for a
@@ -226,7 +223,7 @@ Description
  navigation).
 
 
-VRJConfig
+###VRJConfig
 
  VRJConfig is the configuration editor for VR Juggler. It is a complete
  rewrite of VjControl, both in terms of the user interface and the back-end
@@ -245,7 +242,7 @@ VRJConfig
  configurations.
 
 
-VR Juggler 2.x
+###VR Juggler 2.x
 
  TODO... (this is the version number of the next release of Juggler)
 
