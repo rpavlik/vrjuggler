@@ -3,7 +3,7 @@
 
 The Juggler Team
 
- $Date$
+ November 27, 2010
 
 ----------------------------------------------------------------------------
 ##Table of Contents
@@ -37,7 +37,7 @@ The Juggler Team
 ##Compiling
 
  For information on compiling the source code, refer to either the
- INSTALL.txt or INSTALL.html file found in this directory.
+ [INSTALL.txt](INSTALL.txt) or [INSTALL.html](INSTALL.html) file found in this directory.
 
 
 ##Modules
@@ -53,7 +53,7 @@ The Juggler Team
 
 ####Directory
 
- juggler/modules/vrjuggler
+ [modules/vrjuggler](modules/vrjuggler)
 
 
 ####Description
@@ -71,7 +71,7 @@ The Juggler Team
 
 ####Directory
 
- juggler/modules/vapor
+ [modules/vapor](modules/vapor)
 
 
 ####Description
@@ -120,7 +120,7 @@ The Juggler Team
 
 ####Directory
 
- juggler/modules/jackal
+ [modules/jackal](modules/jackal)
 
 
 ####Description
@@ -139,8 +139,8 @@ The Juggler Team
  To build the configuration editor JavaBeans, JDOM and the Tweek Java API
  are required. Tweek is another module in the Juggler Project, and it will
  be built automatically as a dependency of JCCL. JDOM comes with the Juggler
- Project source code and can be found in the directory juggler/external/
- jdom.
+ Project source code and can be found in the directory
+ [external/jdom](external/jdom).
 
 
 ###Gadgeteer
@@ -148,7 +148,7 @@ The Juggler Team
 
 ####Directory
 
- juggler/modules/gadgeteer
+ [modules/gadgeteer](modules/gadgeteer)
 
 
 ####Description
@@ -168,7 +168,7 @@ The Juggler Team
 
 ####Directory
 
- juggler/modules/sonix
+ [modules/sonix](modules/sonix)
 
 
 ####Description
@@ -191,7 +191,7 @@ The Juggler Team
 
 ###Directory
 
- juggler/modules/tweek
+ [modules/tweek](modules/tweek)
 
 
 ###Description
