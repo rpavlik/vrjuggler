@@ -50,13 +50,7 @@ to VR Juggler 1.0.
 
 ###VR Juggler
 
-
-####Directory
-
 [modules/vrjuggler](modules/vrjuggler)
-
-
-####Description
 
 VR Juggler is still VR Juggler. There are many new features in VR Juggler
 since the 1.0 series, but in essence, it is still the same familiar tool.
@@ -68,13 +62,7 @@ of VR Juggler is given in the following section.
 
 ###VR Juggler Portable Runtime (VPR)
 
-
-####Directory
-
 [modules/vapor](modules/vapor)
-
-
-####Description
 
 VPR is the foundation for all the Juggler modules. It provides an object-
 oriented, cross-platform abstraction layer to common operating system
@@ -115,13 +103,7 @@ to modules/vapor/INSTALL.txt.
 
 ###Juggler Configuration and Control Library (JCCL)
 
-
-####Directory
-
 [modules/jackal](modules/jackal)
-
-
-####Description
 
 JCCL provides the configuration layer for VR Juggler and other modules. The
 config chunks and reusable configuration editor JavaBeans come from JCCL.
@@ -143,13 +125,7 @@ Project source code and can be found in the directory
 
 ###Gadgeteer
 
-
-####Directory
-
 [modules/gadgeteer](modules/gadgeteer)
-
-
-####Description
 
 Gadgeteer is made up of the code that was formerly in the VR Juggler 1.0
 Input directory. It contains all the drivers used for VR Juggler input
@@ -163,13 +139,7 @@ time.
 
 ###Sonix
 
-
-####Directory
-
 [modules/sonix](modules/sonix)
-
-
-####Description
 
 Sonix provides an interface useful to many simple VR and entertainment
 applications to trigger and position sounds in 3D. This library provides
@@ -186,13 +156,7 @@ portable.
 
 ###Tweek
 
-
-###Directory
-
 [modules/tweek](modules/tweek)
-
-
-###Description
 
 Tweek is a cross-platform, cross-language library consisting of a C++ API
 and a Java API. Its purpose is to provide a convenient mechanism for a
