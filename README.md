@@ -1,5 +1,5 @@
 #Juggler Project Overview
-
+![VR Juggler](juggler-logo.gif)
 
 The Juggler Team
 
