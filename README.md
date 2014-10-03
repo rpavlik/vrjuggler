@@ -193,7 +193,7 @@ all, VRJConfig is a highly dynamic, powerful editor for VR Juggler
 configurations.
 
 
-###VR Juggler 2.x
+##VR Juggler 2.x
 
 TODO... (this is the version number of the next release of Juggler)
 
